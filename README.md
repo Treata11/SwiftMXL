@@ -156,11 +156,9 @@ Run the tests:
 swift test
 ```
 
-If you use the Xcode IDE, use the Swift Package Manager to generate an `.xcodeproj` file:
+If you use the Xcode IDE
 
-```
-swift package generate-xcodeproj
-```
+```open package.swift``` or simply ```xed .```
 
 ### Development Roadmap
 
