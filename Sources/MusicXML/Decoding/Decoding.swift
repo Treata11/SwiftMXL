@@ -11,6 +11,7 @@ import XMLCoder
 extension Score {
     public static let topLevelTagKey = "topLevelTagKey"
 
+    // !!!: It's always failing!
     public enum Error: Swift.Error {
         case invalidMusicXMLString(Swift.String)
     }
@@ -18,6 +19,7 @@ extension Score {
     /// Creates a `MusicXML` model from the given MusicXML-formatted `string`.
     public init(string: Swift.String) throws {
         guard let data = string.data(using: .utf8) else {
+            // !!!: The data couldn’t be read because it isn’t in the correct format.
             throw Error.invalidMusicXMLString(string)
         }
         try self.init(data: data)
@@ -90,5 +92,110 @@ extension Score {
         } catch {
             return nil
         }
+    }
+    
+// MARK: - HearMeOut
+    
+//    func decodeScoreFrom(_ url: URL) {
+//        measureIndex = 0
+//        originalScore = parserManager.parseFromUrl(url: url)
+//        generateStaffDictionary()
+//
+//        generateFocusArray()
+//    }
+    
+    static func decode<T: Decodable>(type: T.Type, from url: URL) throws -> T {
+        let string = try String(contentsOf: url)
+        let data = string.data(using: .utf8)!
+        let decoder = XMLDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return try decoder.decode(type, from: data)
+    }
+    
+}
+
+// MARK: - ParserBase
+
+// TODO: New File
+// Base class that is used to consume foundCharacters via the parser
+class ParserBase : NSObject, XMLParserDelegate  {
+
+    var currentElement = ""
+    var foundCharacters = ""
+    weak var parent: ParserBase? = nil
+
+    func parser(
+        _ parser: XMLParser,
+        didStartElement elementName: String,
+        namespaceURI: String?,
+        qualifiedName qName: String?,
+        attributes attributeDict: [String : String]
+    ) {
+
+        currentElement = elementName
+    }
+
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
+        if (string.trimmingCharacters(in: .whitespacesAndNewlines) != "") {
+            foundCharacters += string
+        }
+        
+    }
+}
+
+// MARK: - ParserManager
+
+//class ParserManager {
+//    let url: URL = Bundle.main.url(forResource: "Chant" , withExtension: "musicxml")!
+//
+//    init() { }
+//
+//    func parseFromUrl(url: URL) -> ScorePartwise? {
+////        guard url.startAccessingSecurityScopedResource() else { return nil }
+//        print("URL EXT 2 \(url)")
+//
+//        do {
+//            let string = try String(contentsOf: url)
+//            let data = string.data(using: .utf8)!
+//            let parser = XMLParser(data: data)
+//
+//            let score = ScorePartwise
+//            parser.delegate = score
+//
+//            parser.parse()
+////            url.stopAccessingSecurityScopedResource()
+//            return score
+//            //print("SCORE: \(score.work.workTitle)")
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+//        return nil
+//    }
+//}
+
+// MARK: - ScoreModel
+
+///import XMLCoder
+
+struct MusicXMLDecoder {
+    
+    static func decode<T: Decodable>(type: T.Type, from url: URL) throws -> T {
+        let string = try String(contentsOf: url)
+        let data = string.data(using: .utf8)!
+        let decoder = XMLDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return try decoder.decode(type, from: data)
+    }
+}
+
+struct Encoding_: Codable {
+    let software: String?
+    let encodingDate: String?
+    let supports: [Supports]?
+    
+    enum CodingKeys: String, CodingKey {
+        case software = "software"
+        case encodingDate = "encoding-date"
+        case supports = "supports"
     }
 }

@@ -19,13 +19,13 @@ public struct MIDIInstrument {
 
     // MARK: Elements
 
-    /// The midi-channel element specifies a MIDI 1.0 channel number ranging from 1 to 16.
+    /// The `midi-channel` element specifies a MIDI 1.0 channel number ranging from 1 to 16.
     public var channel: Int?
-    /// The midi-name element corresponds to a ProgramName meta-event within a Standard MIDI File.
+    /// The `midi-name` element corresponds to a ProgramName meta-event within a Standard MIDI File.
     public var name: String?
     /// The midi-bank element specified a MIDI 1.0 bank number ranging from 1 to 16,384.
     public var bank: Int?
-    /// The midi-program element specifies a MIDI 1.0 program number ranging from 1 to 128.
+    /// The `midi-program` element specifies a MIDI 1.0 program number ranging from 1 to 128.
     public var program: Int?
     /// For unpitched instruments, the midi-unpitched element specifies a MIDI 1.0 note number
     /// ranging from 1 to 128. It is usually used with MIDI banks for percussion. Note that MIDI 1.0
@@ -71,11 +71,12 @@ public struct MIDIInstrument {
     }
 }
 
-extension MIDIInstrument: Equatable {}
+extension MIDIInstrument: Equatable { }
+
 extension MIDIInstrument: Codable {
     // MARK: - Codable
 
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey, XMLChoiceCodingKey {
         case id
         case channel = "midi-channel"
         case name = "midi-name"

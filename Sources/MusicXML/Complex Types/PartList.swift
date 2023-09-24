@@ -31,62 +31,10 @@ public struct PartList {
     }
 }
 
-extension PartList {
-    public enum Item {
-        case group(PartGroup)
-        case part(ScorePart)
-    }
-}
+// MARK: - PartList Extensions
 
-extension PartList.Item: Equatable {}
-extension PartList.Item: Codable {
-    // MARK: - Codable
+extension PartList: Equatable { }
 
-    enum CodingKeys: String, CodingKey {
-        case group = "part-group"
-        case part = "score-part"
-    }
-
-    // MARK: Encodable
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        switch self {
-        case let .group(value):
-            try container.encode(value, forKey: .group)
-        case let .part(value):
-            try container.encode(value, forKey: .part)
-        }
-    }
-
-    // MARK: Decodable
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        func decode <T>(_ key: CodingKeys) throws -> T where T: Codable {
-            return try container.decode(T.self, forKey: key)
-        }
-
-        if container.contains(.group) {
-            self = .group(try decode(.group))
-        } else if container.contains(.part) {
-            self = .part(try decode(.part))
-        } else {
-            throw DecodingError.typeMismatch(
-                PartList.Item.self,
-                DecodingError.Context(
-                    codingPath: decoder.codingPath,
-                    debugDescription: "Unrecognized choice"
-                )
-            )
-        }
-    }
-}
-
-extension PartList.Item.CodingKeys: XMLChoiceCodingKey {}
-
-extension PartList: Equatable {}
 extension PartList: Codable {
     // MARK: - Codable
 
@@ -111,3 +59,68 @@ extension PartList: DynamicNodeEncoding {
         return .element
     }
 }
+
+// MARK: - PartList.Item
+
+extension PartList {
+    public enum Item {
+        case group(PartGroup)
+        case part(ScorePart)
+    }
+}
+
+extension PartList.Item: Equatable { }
+
+extension PartList.Item: Codable {
+    // MARK: - Codable
+
+    enum CodingKeys: String, CodingKey, XMLChoiceCodingKey {
+        case group = "part-group"
+        case part = "score-part"
+    }
+
+    // MARK: Encodable
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case let .group(value):
+            try container.encode(value, forKey: .group)
+        case let .part(value):
+            try container.encode(value, forKey: .part)
+        }
+    }
+
+    // MARK: Decodable
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        func decode <T>(_ key: CodingKeys) throws -> T where T: Codable {
+            return try container.decode(T.self, forKey: key)
+        }
+/*
+        if container.contains(.group) {
+            self = .group(try decode(.group))
+        } else if container.contains(.part) {
+            self = .part(try decode(.part))
+        } else {
+            // !!!: container is always failing in Tests!
+            throw DecodingError.typeMismatch(
+                PartList.Item.self,
+                DecodingError.Context(
+                    codingPath: decoder.codingPath,
+                    debugDescription: "Unrecognized choice"
+                )
+            )
+        }
+ */
+        do {
+            self = .group(try decode(.group))
+        } catch {
+            self = .part(try decode(.part))
+        }
+    }
+}
+
+//extension PartList.Item.CodingKeys: XMLChoiceCodingKey { }

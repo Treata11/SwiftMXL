@@ -100,8 +100,6 @@ extension Sound {
 
         // MARK: - Initializers
 
-        // MARK: - Initializers
-
         public init(midiDevice: MIDIDevice? = nil, midiInstrument: MIDIInstrument? = nil, play: Play? = nil) {
             self.midiDevice = midiDevice
             self.midiInstrument = midiInstrument
@@ -272,6 +270,7 @@ extension Sound.MIDI {
 }
 
 import XMLCoder
+
 extension MIDIComponent.CodingKeys: XMLChoiceCodingKey {}
 
 extension Sound: DynamicNodeDecoding {

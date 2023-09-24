@@ -28,8 +28,9 @@ public enum Score: Equatable {
     case timewise(Timewise)
 }
 
+// MARK: - Codable
+
 extension Score: Codable {
-    // MARK: - Codable
 
     enum CodingKeys: String, CodingKey {
         case partwise = "score-partwise"
@@ -56,8 +57,10 @@ extension Score: Codable {
             switch codingKey {
             case .partwise:
                 self = .partwise(try container.decode(Partwise.self))
+                print("\n\n\(Partwise.self) Decoded partwisely")
             case .timewise:
                 self = .timewise(try container.decode(Timewise.self))
+                print("\n\n\(Timewise.self) Decoded timewisely")
             }
         } else {
             // Fall back to try each top level tag

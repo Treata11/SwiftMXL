@@ -11,6 +11,7 @@ public struct Partwise {
 
     // MARK: Elements
 
+    // TODO: Check the new elements in MusicXML 4.0
     public var work: Work?
     public var movementNumber: String?
     public var movementTitle: String?
@@ -85,8 +86,17 @@ extension Partwise: Codable {
 }
 
 import XMLCoder
+
+// !!!: `NodeEncoding`
 extension Partwise: DynamicNodeEncoding {
     public static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
+//        switch key {
+//        case Partwise.CodingKeys.parts: return .both
+//        default: return .element
+//        }
+// T.
         return .element
     }
 }
+
+// https://github.com/CoreOffice/XMLCoder/blob/3944866/README.md#dynamic-node-coding

@@ -10,6 +10,7 @@ import XCTest
 import Yams
 
 class ScoreTests: XCTestCase {
+    
     func testAll() throws {
         try runTest(inDirectory: testSuiteURL)
     }

@@ -55,12 +55,12 @@ extension ScoreInstrument {
     }
 }
 
-extension ScoreInstrument.SoloEnsemble: Equatable {}
+extension ScoreInstrument.SoloEnsemble: Equatable { }
 
 extension ScoreInstrument.SoloEnsemble: Codable {
     // MARK: - Codable
 
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey, XMLChoiceCodingKey {
         case solo
         case ensemble
     }
@@ -97,15 +97,16 @@ extension ScoreInstrument.SoloEnsemble: Codable {
     }
 }
 
-extension ScoreInstrument: Equatable {}
+extension ScoreInstrument: Equatable { }
+
 extension ScoreInstrument: Codable {
     // MARK: - Codable
 
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey, XMLChoiceCodingKey {
         case id
         case name = "instrument-name"
         case abbreviation = "instrument-abbreviation"
-        case sound
+        case sound = "instrument-sound"
         case soloOrEnsemble
         case virtualInstrument = "virtual-instrument"
     }

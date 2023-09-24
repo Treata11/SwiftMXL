@@ -50,7 +50,8 @@ public struct PartGroup {
     }
 }
 
-extension PartGroup: Equatable {}
+extension PartGroup: Equatable { }
+
 extension PartGroup: Codable {
     // MARK: - Codable
 
@@ -69,6 +70,7 @@ extension PartGroup: Codable {
 }
 
 import XMLCoder
+
 extension PartGroup: DynamicNodeEncoding {
     public static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
         switch key {
