@@ -18,15 +18,15 @@ public struct PartLink {
     
     public var hRef: URL    //
     
-    public var actuate: String? //
+    public var actuate: XLinkActuate? 
     
     public var role: String?   // token?
     
-    public var show: String?    //
+    public var show: XLinkShow?
     
     public var title: String?
     
-    public var type: String?
+    public var type: XLinkType?
     
     // MARK: Elements
     
