@@ -75,5 +75,6 @@ public enum AccidentalValue: String {
     case other
 }
 
-extension AccidentalValue: Equatable {}
-extension AccidentalValue: Codable {}
+extension AccidentalValue: Equatable { }
+
+extension AccidentalValue: Codable { }

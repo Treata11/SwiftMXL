@@ -7,10 +7,12 @@
 
 import XMLCoder
 
-/// The score-instrument type represents a single instrument within a score-part. As with the
-/// score-part type, each score-instrument has a required ID attribute, a name, and an optional
-/// abbreviation.  A score-instrument type is also required if the score specifies MIDI 1.0
-/// channels, banks, or programs. An initial midi-instrument assignment can also be made here.
+/// The `score-instrument` type represents a single instrument within a `score-part`. As with the
+/// `score-part` type, each `score-instrument` has a required ID attribute, a name, and an optional
+/// abbreviation.
+///
+/// A `score-instrument` type is also required if the score specifies MIDI 1.0
+/// channels, banks, or programs. An initial `midi-instrument` assignment can also be made here.
 /// MusicXML software should be able to automatically assign reasonable channels and instruments
 /// without these elements in simple cases, such as where part names match General MIDI instrument
 /// names.
@@ -48,54 +50,7 @@ public struct ScoreInstrument {
     }
 }
 
-extension ScoreInstrument {
-    public enum SoloEnsemble {
-        case solo
-        case ensemble(String)
-    }
-}
-
-extension ScoreInstrument.SoloEnsemble: Equatable { }
-
-extension ScoreInstrument.SoloEnsemble: Codable {
-    // MARK: - Codable
-
-    enum CodingKeys: String, CodingKey, XMLChoiceCodingKey {
-        case solo
-        case ensemble
-    }
-
-    // MARK: Encodable
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        switch self {
-        case .solo:
-            try container.encode("", forKey: .solo)
-        case let .ensemble(value):
-            try container.encode(value, forKey: .ensemble)
-        }
-    }
-
-    // MARK: Decodable
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        if container.contains(.ensemble) {
-            self = .ensemble(try container.decode(String.self, forKey: .ensemble))
-        } else if container.contains(.solo) {
-            self = .solo
-        } else {
-            throw DecodingError.typeMismatch(
-                ScoreInstrument.SoloEnsemble.self,
-                DecodingError.Context(
-                    codingPath: decoder.codingPath,
-                    debugDescription: "Unrecognized ScoreInstrument.SoloEnsemble"
-                )
-            )
-        }
-    }
-}
+// MARK: - ScoreInstrument Extensions
 
 extension ScoreInstrument: Equatable { }
 
@@ -131,5 +86,62 @@ extension ScoreInstrument: DynamicNodeEncoding {
         default:
             return .element
         }
+    }
+}
+
+// MARK: - ScoreInstrument.SoloEnsemble
+
+extension ScoreInstrument {
+    public enum SoloEnsemble {
+        case solo
+        case ensemble(String)
+    }
+}
+
+extension ScoreInstrument.SoloEnsemble: Equatable { }
+
+extension ScoreInstrument.SoloEnsemble: Codable {
+    // MARK: - Codable
+
+    enum CodingKeys: String, CodingKey, XMLChoiceCodingKey {
+        case solo
+        case ensemble
+    }
+
+    // MARK: Encodable
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .solo:
+            try container.encode("", forKey: .solo)
+        case let .ensemble(value):
+            try container.encode(value, forKey: .ensemble)
+        }
+    }
+
+    // MARK: Decodable
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        if container.contains(.ensemble) {
+            self = .ensemble(try container.decode(String.self, forKey: .ensemble))
+        } else if container.contains(.solo) {
+            self = .solo
+        } else {
+            throw DecodingError.typeMismatch(
+                ScoreInstrument.SoloEnsemble.self,
+                DecodingError.Context(
+                    codingPath: decoder.codingPath,
+                    debugDescription: "Unrecognized ScoreInstrument.SoloEnsemble"
+                )
+            )
+        }
+//        do {
+//            self = .ensemble(try container.decode(String.self, forKey: .ensemble))
+//        } catch {
+//            self = .solo
+//        }
     }
 }

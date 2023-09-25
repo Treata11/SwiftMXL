@@ -65,11 +65,12 @@ public struct AccidentalText {
     }
 }
 
-extension AccidentalText: Equatable {}
+extension AccidentalText: Equatable { }
+
 extension AccidentalText: Codable {
     // MARK: - Codable
 
-    private enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey, XMLChoiceCodingKey {
         case justify
         case hAlign = "halign"
         case vAlign = "valign"
@@ -88,6 +89,7 @@ extension AccidentalText: Codable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        
         self.justify = try container.decodeIfPresent(LeftCenterRight.self, forKey: .justify)
         self.printStyle = try PrintStyle(from: decoder)
         self.hAlign = try container.decodeIfPresent(LeftCenterRight.self, forKey: .hAlign)
@@ -124,6 +126,7 @@ extension AccidentalText: Codable {
 }
 
 import XMLCoder
+
 extension AccidentalText: DynamicNodeEncoding {
     public static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
         switch key {

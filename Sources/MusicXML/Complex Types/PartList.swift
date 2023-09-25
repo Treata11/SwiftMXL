@@ -99,7 +99,7 @@ extension PartList.Item: Codable {
         func decode <T>(_ key: CodingKeys) throws -> T where T: Codable {
             return try container.decode(T.self, forKey: key)
         }
-/*
+
         if container.contains(.group) {
             self = .group(try decode(.group))
         } else if container.contains(.part) {
@@ -114,12 +114,12 @@ extension PartList.Item: Codable {
                 )
             )
         }
- */
-        do {
-            self = .group(try decode(.group))
-        } catch {
-            self = .part(try decode(.part))
-        }
+
+//        do {
+//            self = .group(try decode(.group))
+//        } catch {
+//            self = .part(try decode(.part))
+//        }
     }
 }
 

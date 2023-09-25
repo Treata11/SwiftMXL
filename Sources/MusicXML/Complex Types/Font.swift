@@ -21,18 +21,18 @@ public struct Font {
     // MARK: Attributes
 
     // FIXME: Font.family should be `CommaSeparatedText`
-    public let family: String?
+    public let family: CommaSeparatedText?
 
     // MARK: Attribute Groups
 
-    public let style: FontStyle?
     public let size: FontSize?
+    public let style: FontStyle?
     public let weight: FontWeight?
 
     // MARK: - Initializers
 
     public init(
-        family: String? = nil,
+        family: CommaSeparatedText? = nil,
         style: FontStyle? = nil,
         size: FontSize? = nil,
         weight: FontWeight? = nil
@@ -44,11 +44,12 @@ public struct Font {
     }
 }
 
-extension Font: Equatable {}
+extension Font: Equatable { }
+
 extension Font: Codable {
     // MARK: - Codable
 
-    internal enum CodingKeys: String, CodingKey {
+    internal enum CodingKeys: String, CodingKey, XMLChoiceCodingKey {
         case family = "font-family"
         case style = "font-style"
         case size = "font-size"
@@ -69,16 +70,18 @@ extension Font: Codable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.family = try container.decodeIfPresent(String.self, forKey: .family)
+        
+        self.family = try container.decodeIfPresent(CommaSeparatedText.self, forKey: .family)
         self.style = try container.decodeIfPresent(FontStyle.self, forKey: .style)
         self.size = try container.decodeIfPresent(FontSize.self, forKey: .size)
         self.weight = try container.decodeIfPresent(FontWeight.self, forKey: .weight)
     }
 }
 
-extension Font.CodingKeys: XMLAttributeGroupCodingKey {}
+extension Font.CodingKeys: XMLAttributeGroupCodingKey { }
 
 import XMLCoder
+
 extension Font: DynamicNodeEncoding {
     public static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
         if key is XMLAttributeGroupCodingKey {

@@ -82,11 +82,12 @@ public struct Position {
     }
 }
 
-extension Position: Equatable {}
+extension Position: Equatable { }
+
 extension Position: Codable {
     // MARK: - Codable
 
-    internal enum CodingKeys: String, CodingKey {
+    internal enum CodingKeys: String, CodingKey, XMLChoiceCodingKey {
         case defaultX = "default-x"
         case defaultY = "default-y"
         case relativeX = "relative-x"

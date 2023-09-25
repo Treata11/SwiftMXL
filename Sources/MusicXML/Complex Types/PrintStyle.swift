@@ -28,7 +28,8 @@ public struct PrintStyle {
     }
 }
 
-extension PrintStyle: Equatable {}
+extension PrintStyle: Equatable { }
+
 extension PrintStyle: Codable {
     // MARK: - Codable
 
@@ -55,9 +56,10 @@ extension PrintStyle: Codable {
     }
 }
 
-extension PrintStyle.CodingKeys: XMLAttributeGroupCodingKey {}
+extension PrintStyle.CodingKeys: XMLAttributeGroupCodingKey { }
 
 import XMLCoder
+
 extension PrintStyle: DynamicNodeEncoding {
     public static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
         if key is XMLAttributeGroupCodingKey {
@@ -65,9 +67,9 @@ extension PrintStyle: DynamicNodeEncoding {
         }
         switch key {
         case CodingKeys.color:
-            return .attribute
+            return .attribute   // !!!: Shouldn't it be .element?
         default:
-            return .element
+            return .element     // !!!: Shouldn't it be .attribute?
         }
     }
 }
