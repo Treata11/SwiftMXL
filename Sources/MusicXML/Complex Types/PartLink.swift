@@ -16,7 +16,7 @@ public struct PartLink {
 
     // MARK: Attributes
     
-    public var hRef: URL    //
+    public var hRef: URL    // Any URI
     
     public var actuate: XLinkActuate? 
     
@@ -24,13 +24,17 @@ public struct PartLink {
     
     public var show: XLinkShow?
     
-    public var title: String?
+    public var title: String?   // token?
     
     public var type: XLinkType?
     
     // MARK: Elements
     
-    public var instrumentLink: [String]
+    public var instrumentLink: [InstrumentLink]
+    /// Multiple `part-link` elements can reference different types of linked documents,
+    /// such as parts and condensed score. The optional `group-link` elements identify
+    /// the groups used in the linked document. The content of a `group-link` element
+    /// should match the content of a `group` element in the linked document.
     public var groupLink: [String]
     
 }
@@ -40,3 +44,8 @@ public struct PartLink {
 extension PartLink: Equatable { }
 
 extension PartLink: Codable { }
+
+// TODO: Create a new type on PartLink that encapsulates instrumentLink & groupLink
+// TODO: Implement the codable protocol
+
+// Ref: https://www.w3.org/2021/06/musicxml40/musicxml-reference/elements/part-link/
