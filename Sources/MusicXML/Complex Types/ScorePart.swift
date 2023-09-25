@@ -27,6 +27,13 @@ public struct ScorePart {
     /// MuseData headers that may apply at a score-wide, movement-wide, or part-wide level. The
     /// creator, rights, source, and relation elements are based on _Dublin Core_.
     public var identification: Identification?
+    
+    // FIXME: Implement PartLink as the Type
+    ///The `part-link` element allows MusicXML data for both score and parts to be contained
+    ///within a single compressed MusicXML file. It links a `score-part` from a score document to
+    ///MusicXML documents that contain parts data. In the case of a single compressed MusicXML file,
+    ///the link href values are paths that are relative to the root folder of the zip file.
+    public var link: [PartLink]
 
     /// The `part-name` type describes the name or abbreviation of a `score-part` element. Formatting
     /// attributes for the `part-name` element are **deprecated** in Version 2.0 in favor of the new
@@ -77,9 +84,10 @@ public struct ScorePart {
 
     // MARK: - Initializers
 
-    public init(id: String, identification: Identification? = nil, name: PartName, nameDisplay: NameDisplay? = nil, partAbbreviation: PartName? = nil, partAbbreviationDisplay: NameDisplay? = nil, group: [String]? = nil, scoreInstrument: [ScoreInstrument]? = nil, midi: [MIDI]? = nil) {
+    public init(id: String, identification: Identification? = nil, link: [PartLink] = [], name: PartName, nameDisplay: NameDisplay? = nil, partAbbreviation: PartName? = nil, partAbbreviationDisplay: NameDisplay? = nil, group: [String]? = nil, scoreInstrument: [ScoreInstrument]? = nil, midi: [MIDI]? = nil) {
         self.id = id
         self.identification = identification
+        self.link = link
         self.name = name
         self.nameDisplay = nameDisplay
         self.partAbbreviation = partAbbreviation
@@ -100,6 +108,7 @@ extension ScorePart: Codable {
     enum CodingKeys: String, CodingKey, XMLChoiceCodingKey {
         case id
         case identification
+        case link = "part-link"
         case name = "part-name"
         case nameDisplay = "part-name-display"
         case partAbbreviation = "part-abbreviation"
@@ -116,6 +125,7 @@ extension ScorePart: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encodeIfPresent(identification, forKey: .identification)
+        try container.encode(link, forKey: .link)
         try container.encode(name, forKey: .name)
         try container.encodeIfPresent(nameDisplay, forKey: .nameDisplay)
         try container.encodeIfPresent(partAbbreviation, forKey: .partAbbreviation)
@@ -138,6 +148,7 @@ extension ScorePart: Codable {
         
         self.id = try container.decode(String.self, forKey: .id)
         self.identification = try container.decodeIfPresent(Identification.self, forKey: .identification)
+        self.link = try container.decode([PartLink].self, forKey: .link)
         self.name = try container.decode(PartName.self, forKey: .name)
         self.nameDisplay = try container.decodeIfPresent(NameDisplay.self, forKey: .nameDisplay)
         self.partAbbreviation = try container.decodeIfPresent(PartName.self, forKey: .partAbbreviation)
