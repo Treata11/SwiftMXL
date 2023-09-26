@@ -1,11 +1,14 @@
-# MusicXML
+# SwiftMXL
+
+This package is a fork of the original 
+[dn-m/MusicXML](https://github.com/dn-m/MusicXML).
 
 ![Swift Version](https://img.shields.io/badge/Swift-5.1-orange.svg)
 ![Platforms](https://img.shields.io/badge/platform-linux%20%7C%20macOS%20%7C%20iOS%20%7C%20watchOS%20%7C%20tvOS-lightgrey)
-[![Build Status](https://travis-ci.org/dn-m/MusicXML.svg?branch=latest)](https://travis-ci.org/dn-m/MusicXML)
-[![Code Coverage](https://codecov.io/gh/dn-m/MusicXML/branch/latest/graph/badge.svg)](https://codecov.io/github/dn-m/MusicXML)
+<!-- [![Build Status](https://travis-ci.org/dn-m/MusicXML.svg?branch=latest)](https://travis-ci.org/dn-m/MusicXML) -->
+<!-- [![Code Coverage](https://codecov.io/gh/dn-m/MusicXML/branch/latest/graph/badge.svg)](https://codecov.io/github/dn-m/MusicXML) -->
 
-A **work-in-progress** implementation of the [musicXML](https://www.musicxml.com) specification in Swift.
+A **Work-In-Progress** implementation of the [MusicXML](https://www.musicxml.com) specification in Swift.
 
 The goal of this project is to allow Swift users to read, manipulate, and write musicXML files in a richly-typed manner on any platform supported by Swift.
 
@@ -109,39 +112,27 @@ let fromString = try Score(string: string)
 let fromURL = try Score(url: url)
 ```
 
-### 🚧 Work-in-progress: Encoding a `Score` into musicXML
+[comment]: <> ( ### 🚧 Work-in-progress: Encoding a `Score` into musicXML)
 
-[Pre-release version 0.3.0](https://github.com/dn-m/MusicXML/milestone/1) will see the completion of the encoding from a `Score` into the musicXML format.
+
 
 
 ## Getting Started
 
 ### Requirements
 
-Use the [Swift Package Manager](https://swift.org/package-manager/) to include the `MusicXML` module into your project.
+Use the [Swift Package Manager](https://swift.org/package-manager/) to include the `SwiftMXL` module into your project.
 
-### Usage
+[comment]: <> ( ### Usage)
 
-If you want to use the `MusicXML` module in your own project, add the `MusicXML` package to the `dependencies` section of your `Package.swift` file:
+[comment]: <> ( If you want to use the `SwiftMXL` module in your own project, add the `SwiftMXL` package to the `dependencies` section of your `Package.swift` file:)
 
-```Swift
-let package = Package(
-    name: ...,
-    products: [ ... ],
-    dependencies: [
-        ...,
-        .package(url: "https://github.com/dn-m/MusicXML", from: "0.2.1")
-    ],
-    targets: [ ... ]
-)
-```
+<!-- ### Development
 
-### Development
-
-To contribute to the `MusicXML` package, clone the `git` repository:
+To contribute to the `SwiftMXL` package, clone the `git` repository:
 
 ```
-git clone https://github.com/dn-m/MusicXML && cd MusicXML
+git clone https://github.com/Treata11/SwiftMXL && cd SwiftMXL
 ```
 
 Build the package:
@@ -159,20 +150,10 @@ swift test
 If you use the Xcode IDE
 
 ```open package.swift``` or simply ```xed .```
-
-### Development Roadmap
-
-The upcoming pre-release versions will be focused on completing different tasks.
-
-### 0.3.0
-
-Pre-release version **0.3.0** will be defined by completing the implementation of the **encoding** of **abstract musical content**. The LilyPond Test Suite tests will be transformed into round-trip tests to ensure that the plumbing is clean.
-
-### 0.4.0
-
-Pre-release version **0.4.0** will be defined by refining the public interfaces exposed by the `MusicXML` package. Up until this point, pubic initializers may be somewhat clumsy.
+-->
 
 
 ## More Resources
 
-See the [MusicXML XSD Schema Reference](http://usermanuals.musicxml.com/MusicXML/MusicXML.htm#MusicXMLReference.htm%3FTocPath%3DMusicXML%2520Reference%7C_____0) for more information about how musicXML is structured.
+See the 
+[MusicXML XSD Schema Reference](http://usermanuals.musicxml.com/MusicXML/MusicXML.htm#MusicXMLReference.htm%3FTocPath%3DMusicXML%2520Reference%7C_____0) for more information about how MusicXML is structured.
