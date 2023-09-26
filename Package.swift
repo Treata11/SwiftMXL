@@ -4,12 +4,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "MusicXML",
+    name: "SwiftMXL",
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
-            name: "MusicXML",
-            targets: ["MusicXML"]
+            name: "SwiftMXL",
+            targets: ["SwiftMXL"]
         ),
     ],
     dependencies: [
@@ -18,12 +18,12 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "MusicXML",
+            name: "SwiftMXL",
             dependencies: ["XMLCoder"]
         ),
         .testTarget(
-            name: "MusicXMLTests",
-            dependencies: ["MusicXML", "Yams"]
+            name: "SwiftMXLTests",
+            dependencies: ["SwiftMXL", "Yams"]
         ),
     ]
 )

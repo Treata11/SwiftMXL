@@ -1,6 +1,6 @@
 import XCTest
 
-import MusicXMLTests
+import SwiftMXLTests
 
 var tests = [XCTestCaseEntry]()
 tests += MusicXMLTests.__allTests()
