@@ -7,7 +7,7 @@
 
 import XMLCoder
 
-/// The part-list identifies the different musical parts in this movement. Each part has an ID that
+/// The `part-list` identifies the different musical parts in this movement. Each part has an ID that
 /// is used later within the musical data. Since parts may be encoded separately and combined later,
 /// identification elements are present at both the score and `score-part levels`.
 ///
@@ -21,7 +21,17 @@ public struct PartList {
     // MARK: Elements
 
     public let parts: [Item]
+    
+    /// According to https://www.w3.org/2021/06/musicxml40/musicxml-reference/elements/part-list/
+    /// The contents of the `part-list` elements are:
+    /// `part-group` (Zero or more times)
+    /// `score-part` (Required)
+    /// **Zero or more of the following**:
+    /// `part-group`
+    /// `score-part`
 
+//    public var scorePart: ScorePart
+    
     // MARK: - Initializers
 
     public init(_ parts: [Item]) {
