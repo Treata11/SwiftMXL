@@ -1,6 +1,6 @@
 //
 //  StaffNoteStylesTests.swift
-//  MusicXMLTests
+//  SwiftMXLTests
 //
 //  Created by James Bean on 10/11/19.
 //

@@ -90,7 +90,7 @@ class ScoreTests: XCTestCase {
         guard let comparisonTestSpecs = manifest.comparison else {
             return nil
         }
-        guard let clazz = Bundle(for: Self.self).classNamed("MusicXMLTests.\(comparisonTestSpecs.expectationClassName)"), let expectationClazz = clazz as? ScoreTestExpectation.Type else {
+        guard let clazz = Bundle(for: Self.self).classNamed("SwiftMXLTests.\(comparisonTestSpecs.expectationClassName)"), let expectationClazz = clazz as? ScoreTestExpectation.Type else {
             print("  - ❓ Expectation class not found. Make sure to specify SwiftClassName in the manifest and make the class conform to ScoreTestExpectation.")
             return nil
         }
@@ -100,7 +100,7 @@ class ScoreTests: XCTestCase {
 
 private var testSuiteURL: URL {
     return URL(fileURLWithPath: "\(#file)")
-        .deletingLastPathComponent() // => MusicXML/Tests/MusicXMLTests/ScoreTests
+        .deletingLastPathComponent() // => SwiftMXL/Tests/SwiftMXLTests/ScoreTests
 }
 
 private func directoryExists(at path: String) -> Bool {

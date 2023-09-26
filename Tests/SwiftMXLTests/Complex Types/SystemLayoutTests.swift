@@ -1,6 +1,6 @@
 //
 //  SystemLayoutTests.swift
-//  MusicXMLTests
+//  SwiftMXLTests
 //
 //  Created by Sihao Lu on 11/17/19.
 //

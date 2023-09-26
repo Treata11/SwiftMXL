@@ -1,6 +1,6 @@
 //
 //  AccidentalTests.swift
-//  MusicXMLTests
+//  SwiftMXLTests
 //
 //  Created by James Bean on 8/4/19.
 //

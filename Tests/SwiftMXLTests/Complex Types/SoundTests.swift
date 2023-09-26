@@ -1,6 +1,6 @@
 //
 //  SoundTests.swift
-//  MusicXMLTests
+//  SwiftMXLTests
 //
 //  Created by Benjamin Wetherfield on 11/21/19.
 //

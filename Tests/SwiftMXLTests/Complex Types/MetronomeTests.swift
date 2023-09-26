@@ -1,6 +1,6 @@
 //
 //  MetronomeTests.swift
-//  MusicXMLTests
+//  SwiftMXLTests
 //
 //  Created by Ben Lu on 10/6/19.
 //

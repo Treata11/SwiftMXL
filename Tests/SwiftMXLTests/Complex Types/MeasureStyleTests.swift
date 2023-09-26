@@ -1,6 +1,6 @@
 //
 //  MeasureStyleTests.swift
-//  MusicXMLTests
+//  SwiftMXLTests
 //
 //  Created by James Bean on 8/8/19.
 //

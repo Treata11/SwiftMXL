@@ -1,6 +1,6 @@
 //
 //  AccordionRegistrationTests.swift
-//  MusicXMLTests
+//  SwiftMXLTests
 //
 //  Created by Sihao Lu on 10/12/19.
 //

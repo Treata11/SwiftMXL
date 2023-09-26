@@ -1,6 +1,6 @@
 //
 //  StabatMaterTests.swift
-//  MusicXMLTests
+//  SwiftMXLTests
 //
 //  Created by James Bean on 10/9/19.
 //

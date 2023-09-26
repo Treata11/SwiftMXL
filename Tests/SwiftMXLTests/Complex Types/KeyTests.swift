@@ -1,6 +1,6 @@
 //
 //  KeyTests.swift
-//  MusicXMLTests
+//  SwiftMXLTests
 //
 //  Created by James Bean on 8/2/19.
 //

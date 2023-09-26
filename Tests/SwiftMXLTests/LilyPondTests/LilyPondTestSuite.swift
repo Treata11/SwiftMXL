@@ -98,9 +98,9 @@ private let blacklist = [
 // Each of these subdirectories contains all of the test music xml files for a given traversal.
 private var testSuiteURL: URL {
     return URL(fileURLWithPath: "\(#file)")
-        .deletingLastPathComponent() // => MusicXML/Tests/MusicXMLTests/LilyPondTests
-        .deletingLastPathComponent() // => MusicXML/Tests/MusicXMLTests
-        .deletingLastPathComponent() // => MusicXML/Tests
+        .deletingLastPathComponent() // => SwiftMXL/Tests/SwiftMXLTests/LilyPondTests
+        .deletingLastPathComponent() // => SwiftMXL/Tests/SwiftMXLTests
+        .deletingLastPathComponent() // => SwiftMXL/Tests
         .appendingPathComponent("LilyPondTestSuite", isDirectory: true)
 }
 

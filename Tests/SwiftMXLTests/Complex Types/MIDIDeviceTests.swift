@@ -1,6 +1,6 @@
 //
 //  MIDIDeviceTests.swift
-//  MusicXMLTests
+//  SwiftMXLTests
 //
 //  Created by Ben Lu on 9/30/19.
 //

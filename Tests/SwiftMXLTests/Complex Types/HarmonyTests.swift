@@ -1,6 +1,6 @@
 //
 //  HarmonyTests.swift
-//  MusicXMLTests
+//  SwiftMXLTests
 //
 //  Created by Ben Lu on 10/8/19.
 //

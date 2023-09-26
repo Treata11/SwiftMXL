@@ -1,6 +1,6 @@
 //
 //  ScoreTestCaseManifest.swift
-//  MusicXMLTests
+//  SwiftMXLTests
 //
 //  Created by Ben Lu on 10/14/19.
 //
