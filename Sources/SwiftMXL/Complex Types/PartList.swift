@@ -22,6 +22,7 @@ public struct PartList {
 
     public let parts: [Item]
     
+    // FIXME: -
     /// According to https://www.w3.org/2021/06/musicxml40/musicxml-reference/elements/part-list/
     /// The contents of the `part-list` elements are:
     /// `part-group` (Zero or more times)
@@ -113,10 +114,11 @@ extension PartList.Item: Codable {
             return try container.decode(T.self, forKey: key)
         }
 
-        if container.contains(.group) {
+        if container.contains(.part) {
+//            self = .part(try decode(.part))
+            self = try .part(container.decode(ScorePart.self, forKey: .part))
+        } else if container.contains(.group) {
             self = .group(try decode(.group))
-        } else if container.contains(.part) {
-            self = .part(try decode(.part))
         } else {
             // !!!: container is always failing in Tests!
             throw DecodingError.typeMismatch(

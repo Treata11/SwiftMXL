@@ -19,6 +19,8 @@
 ///     https://www.w3.org/community/about/agreements/fsa-deed/
 ///
 
+import XMLCoder
+
 /// Either a `partwise` or `timewise` traversal of a MusicXML score.
 public enum Score: Equatable {
     /// The `partwise` traversal of a MusicXML score.
@@ -32,7 +34,7 @@ public enum Score: Equatable {
 
 extension Score: Codable {
 
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey, XMLChoiceCodingKey {
         case partwise = "score-partwise"
         case timewise = "score-timewise"
     }
