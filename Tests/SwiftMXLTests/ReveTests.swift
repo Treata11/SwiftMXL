@@ -352,6 +352,7 @@ class ReveTests: XCTestCase {
         let decoded = try XMLDecoder().decode(Font.self, from: xml.data(using: .utf8)!)
         let expected = Font(family: "Times New Roman", size: 8.25)
         XCTAssertEqual(decoded, expected)
+        // !!!: CommaSeparatedText is failing to excerpt `values`
     }
 
     func testLyricFonts() throws {

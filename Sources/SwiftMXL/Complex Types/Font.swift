@@ -20,8 +20,9 @@ public struct Font {
 
     // MARK: Attributes
 
-    // FIXME: Font.family should be `CommaSeparatedText`
-    public let family: CommaSeparatedText?
+    // FIXME: `CommaSeparatedText` usage might be redundant
+    /// `String` is subsituted instead of `CommaSeparatedText` as for the data type.
+    public let family: String?
 
     // MARK: Attribute Groups
 
@@ -32,7 +33,7 @@ public struct Font {
     // MARK: - Initializers
 
     public init(
-        family: CommaSeparatedText? = nil,
+        family: String? = nil,
         style: FontStyle? = nil,
         size: FontSize? = nil,
         weight: FontWeight? = nil
@@ -71,7 +72,7 @@ extension Font: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        self.family = try container.decodeIfPresent(CommaSeparatedText.self, forKey: .family)
+        self.family = try container.decodeIfPresent(String.self, forKey: .family)
         self.style = try container.decodeIfPresent(FontStyle.self, forKey: .style)
         self.size = try container.decodeIfPresent(FontSize.self, forKey: .size)
         self.weight = try container.decodeIfPresent(FontWeight.self, forKey: .weight)
