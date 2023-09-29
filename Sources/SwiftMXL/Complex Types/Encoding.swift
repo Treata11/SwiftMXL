@@ -25,7 +25,41 @@ public struct Encoding {
     }
 }
 
+// MARK: - Encoding Extensions
+
+extension Encoding: Equatable {}
+
+extension Encoding: Codable {
+    // MARK: - Codable
+
+    // MARK: Decodable
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        self.values = try container.decode([Kind].self)
+    }
+}
+
+extension Encoding: DynamicNodeEncoding {
+    public static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
+        return .element
+    }
+}
+
+// MARK: - Encoding.Kind
+
 extension Encoding {
+    // !!!: Error:
+        /// typeMismatch(
+            /// SwiftMXL.Encoding.Kind,
+            /// Swift.DecodingError.Context(
+                /// codingPath: [CodingKeys(stringValue: "encoding", intValue: nil),
+                /// XMLKey(stringValue: "0", intValue: 0),
+                /// XMLKey(stringValue: "0", intValue: 0)],
+                /// debugDescription: "Unrecognized choice",
+                /// underlyingError: nil
+                /// )
+        /// )
     public enum Kind {
         case encoder(String)
         case date(String)
@@ -36,10 +70,11 @@ extension Encoding {
 }
 
 extension Encoding.Kind: Equatable {}
+
 extension Encoding.Kind: Codable {
     // MARK: - Codable
 
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, XMLChoiceCodingKey {
         case encoder
         case date = "encoding-date"
         case description = "encoding-description"
@@ -69,11 +104,22 @@ extension Encoding.Kind: Codable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+//        let singleValue = try decoder.singleValueContainer()
+//        let decodedXML = try singleValue.decode(String.self)
+//        let decodedContainer = try singleValue.decode([String: String].self)
 
         func decode <T>(_ key: CodingKeys) throws -> T where T: Codable {
             return try container.decode(T.self, forKey: key)
         }
-
+        
+        print("""
+        decoder: \(try String(from: decoder))
+        container: \(container)
+        decoder.singleValueContainer: \(try decoder.singleValueContainer())
+        """)
+        
+        // decoder.unkeyedContainer(): \(try decoder.unkeyedContainer())
+        
         if container.contains(.encoder) {
             self = .encoder(try decode(.encoder))
         } else if container.contains(.date) {
@@ -85,6 +131,15 @@ extension Encoding.Kind: Codable {
         } else if container.contains(.supports) {
             self = .supports(try decode(.supports))
         } else {
+//            print("decodedXML: \(decodedXML)")
+//            print("decodedContainer: \(decodedContainer)")
+            print("""
+            Container Contains \(CodingKeys.encoder.stringValue): \(container.contains(.encoder))
+            Container Contains \(CodingKeys.date.stringValue): \(container.contains(.date))
+            Container Contains \(CodingKeys.description.stringValue): \(container.contains(.date))
+            Container Contains \(CodingKeys.software.stringValue): \(container.contains(CodingKeys.software))
+            Container Contains \(CodingKeys.supports.stringValue): \(container.contains(CodingKeys.supports))
+            """)
             throw DecodingError.typeMismatch(
                 Encoding.Kind.self,
                 DecodingError.Context(
@@ -93,26 +148,5 @@ extension Encoding.Kind: Codable {
                 )
             )
         }
-    }
-}
-
-extension Encoding.Kind.CodingKeys: XMLChoiceCodingKey {}
-
-extension Encoding: Equatable {}
-
-extension Encoding: Codable {
-    // MARK: - Codable
-
-    // MARK: Decodable
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        self.values = try container.decode([Kind].self)
-    }
-}
-
-extension Encoding: DynamicNodeEncoding {
-    public static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
-        return .element
     }
 }

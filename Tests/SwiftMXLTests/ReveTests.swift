@@ -11,21 +11,6 @@ import XMLCoder
 
 class ReveTests: XCTestCase {
     func testIdentification() throws {
-//        let xml = """
-//        <identification>
-//          <creator type="composer">Gabriel Fauré</creator>
-//          <rights>Copyright © 2002 MakeMusic, Inc.</rights>
-//          <encoding>
-//            <software>Finale v25 for Mac</software>
-//            <encoding-date>2017-12-15</encoding-date>
-//            <supports attribute="new-system" element="print" type="yes" value="yes"/>
-//            <supports attribute="new-page" element="print" type="yes" value="yes"/>
-//            <supports element="accidental" type="yes"/>
-//            <supports element="beam" type="yes"/>
-//            <supports element="stem" type="yes"/>
-//          </encoding>
-//        </identification>
-//        """
         let xml = """
         <identification>
           <creator type="composer">Gabriel Fauré</creator>
