@@ -12,6 +12,7 @@ public struct Creator {
 
     // MARK: - Attributes
 
+    /// String is always a substitution for `token` in the project.
     public var type: String?
 
     // MARK: Value

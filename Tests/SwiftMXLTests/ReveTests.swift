@@ -9,8 +9,15 @@ import SwiftMXL
 import XCTest
 import XMLCoder
 
-class ReveTests: XCTestCase {
+final class ReveTests: XCTestCase {
     func testIdentification() throws {
+        var decoder: XMLDecoder {
+            let decoder = XMLDecoder()
+            decoder.trimValueWhitespaces = false
+            decoder.removeWhitespaceElements = true
+            return decoder
+        }
+        
         let xml = """
         <identification>
           <creator type="composer">Gabriel Fauré</creator>
@@ -18,17 +25,16 @@ class ReveTests: XCTestCase {
           <encoding>
             <software>Finale v25 for Mac</software>
             <encoding-date>2017-12-15</encoding-date>
-            <supports element="accidental" type="yes"/>
-            <supports element="beam" type="yes"/>
             <supports element="print" attribute="new-system" type="yes" value="yes"/>
             <supports element="print" attribute="new-page" type="yes" value="yes"/>
+            <supports element="accidental" type="yes"/>
+            <supports element="beam" type="yes"/>
             <supports element="stem" type="yes"/>
           </encoding>
         </identification>
         """
-        let decoder = XMLDecoder()
-        decoder.trimValueWhitespaces = false
-        let decoded = try decoder.decode(Identification.self, from: xml.data(using: .utf8)!)
+        
+        let decoded = try! decoder.decode(Identification.self, from: xml.data(using: .utf8)!)
         let expected = Identification(
             creators: [Creator("Gabriel Fauré", type: "composer")],
             rights: [Rights("Copyright © 2002 MakeMusic, Inc.")],
@@ -36,10 +42,10 @@ class ReveTests: XCTestCase {
                 .software("Finale v25 for Mac"),
                 .date("2017-12-15"),
                 .supports(
-                    Supports(attribute: "new-system", element: "print", type: true, value: "yes")
+                    Supports(element: "print", attribute: "new-system", type: true, value: "yes")
                 ),
                 .supports(
-                    Supports(attribute: "new-page", element: "print", type: true, value: "yes")
+                    Supports(element: "print", attribute: "new-page", type: true, value: "yes")
                 ),
                 .supports(Supports(element: "accidental", type: true)),
                 .supports(Supports(element: "beam", type: true)),
@@ -48,6 +54,51 @@ class ReveTests: XCTestCase {
         )
         XCTAssertEqual(decoded, expected)
     }
+    
+//    func testIdentification2() {
+//        var decoder: XMLDecoder {
+//            let decoder = XMLDecoder()
+//            decoder.trimValueWhitespaces = false
+//            decoder.removeWhitespaceElements = false
+//            return decoder
+//        }
+//        
+//        let xml = """
+//           <identification>
+//              <creator type="composer">Gabriel Fauré</creator>
+//              <rights>Copyright © 2002 MakeMusic, Inc.</rights>
+//              <encoding>
+//                 <software>Finale v27.0 for Mac</software>
+//                 <encoding-date>2021-04-16</encoding-date>
+//                 <supports element="print" attribute="new-system" type="yes" value="yes"/>
+//                 <supports element="print" attribute="new-page" type="yes" value="yes"/>
+//                 <supports element="accidental" type="yes"/>
+//                 <supports element="beam" type="yes"/>
+//                 <supports element="stem" type="yes"/>
+//              </encoding>
+//           </identification>
+//        """
+//        
+//        let decoded = try! decoder.decode(Identification.self, from: xml.data(using: .utf8)!)
+//        let expected = Identification(
+//            creators: [Creator("Gabriel Fauré", type: "composer")],
+//            rights: [Rights("Copyright © 2002 MakeMusic, Inc.")],
+//            encoding: Encoding([
+//                .software("Finale v27 for Mac"),
+//                .date("2021-04-16"),
+//                .supports(
+//                    Supports(element: "print", attribute: "new-system", type: true, value: "yes")
+//                ),
+//                .supports(
+//                    Supports(element: "print", attribute: "new-page", type: true, value: "yes")
+//                ),
+//                .supports(Supports(element: "accidental", type: true)),
+//                .supports(Supports(element: "beam", type: true)),
+//                .supports(Supports(element: "stem", type: true)),
+//            ])
+//        )
+//        XCTAssertEqual(decoded, expected)
+//    }
 
     func testRights() throws {
         let xml = """
@@ -72,14 +123,14 @@ class ReveTests: XCTestCase {
           <supports element="stem" type="yes"/>
         </encoding>
         """
-        let decoded = try XMLDecoder().decode(Encoding.self, from: xml.data(using: .utf8)!)
+        let decoded = try! XMLDecoder().decode(Encoding.self, from: xml.data(using: .utf8)!)
         let expected = Encoding([
             .software("Finale v25 for Mac"),
             .date("2017-12-15"),
             .supports(
-                Supports(attribute: "new-system", element: "print", type: true, value: "yes")
+                Supports(element: "print", attribute: "new-system", type: true, value: "yes")
             ),
-            .supports(Supports(attribute: "new-page", element: "print", type: true, value: "yes")),
+            .supports(Supports(element: "print", attribute: "new-page", type: true, value: "yes")),
             .supports(Supports(element: "accidental", type: true)),
             .supports(Supports(element: "beam", type: true)),
             .supports(Supports(element: "stem", type: true)),
@@ -93,8 +144,8 @@ class ReveTests: XCTestCase {
         """
         let decoded = try XMLDecoder().decode(Supports.self, from: xml.data(using: .utf8)!)
         let expected = Supports(
+            element: "print", 
             attribute: "new-system",
-            element: "print",
             type: true,
             value: "yes"
         )
