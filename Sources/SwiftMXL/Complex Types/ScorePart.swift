@@ -71,6 +71,11 @@ public struct ScorePart {
     /// without these elements in simple cases, such as where part names match General MIDI
     /// instrument names.
     public var scoreInstrument: [ScoreInstrument]?
+    
+    /// The `player` element allows for multiple players per `score-part`
+    /// for use in listening applications. One player may play multiple instruments,
+    /// while a single instrument may include multiple players in divisi sections.
+    public var player: [Player]
 
     /// The `midi-device` type corresponds to the DeviceName meta event in Standard MIDI Files. Unlike
     /// the DeviceName meta event, there can be multiple `midi-device` elements per MusicXML part
@@ -84,7 +89,7 @@ public struct ScorePart {
 
     // MARK: - Initializers
 
-    public init(id: String, identification: Identification? = nil, link: [PartLink] = [], name: PartName, nameDisplay: NameDisplay? = nil, partAbbreviation: PartName? = nil, partAbbreviationDisplay: NameDisplay? = nil, group: [String]? = nil, scoreInstrument: [ScoreInstrument]? = nil, midi: [MIDI]? = nil) {
+    public init(id: String, identification: Identification? = nil, link: [PartLink] = [], name: PartName, nameDisplay: NameDisplay? = nil, partAbbreviation: PartName? = nil, partAbbreviationDisplay: NameDisplay? = nil, group: [String]? = nil, scoreInstrument: [ScoreInstrument]? = nil, player: [Player] = [], midi: [MIDI]? = nil) {
         self.id = id
         self.identification = identification
         self.link = link
@@ -94,6 +99,7 @@ public struct ScorePart {
         self.partAbbreviationDisplay = partAbbreviationDisplay
         self.group = group
         self.scoreInstrument = scoreInstrument
+        self.player = player
         self.midi = midi
     }
 }
@@ -205,8 +211,6 @@ extension ScorePart {
         /// the sound element within a part. The id attribute refers to the score-instrument
         /// affected by the change.
         public let midiInstrument: MIDIInstrument?
-
-        // MARK: - Initializers
 
         // MARK: - Initializers
 
