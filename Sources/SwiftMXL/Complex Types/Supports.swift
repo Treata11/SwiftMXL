@@ -15,15 +15,14 @@ public struct Supports {
     // MARK: - Instance Properties
 
     // MARK: Attributes
-
-    public let attribute: String?
     public let element: String
+    public let attribute: String?
     public let type: Bool
     public let value: String?
 
     // MARK: - Initializers
 
-    public init(attribute: String? = nil, element: String, type: Bool, value: String? = nil) {
+    public init(element: String, attribute: String? = nil, type: Bool, value: String? = nil) {
         self.attribute = attribute
         self.element = element
         self.type = type

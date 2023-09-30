@@ -60,16 +60,16 @@ extension Encoding {
                 /// underlyingError: nil
                 /// )
         /// )
-    public enum Kind {
-        case encoder(String)
-        case date(String)
-        case description(String)
+    public enum Kind: Equatable {
         case software(String)
+        case date(String)
         case supports(Supports)
+        case encoder(String)
+        case description(String)
     }
 }
 
-extension Encoding.Kind: Equatable {}
+//extension Encoding.Kind: Equatable {}
 
 extension Encoding.Kind: Codable {
     // MARK: - Codable
