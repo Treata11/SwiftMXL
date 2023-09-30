@@ -121,6 +121,7 @@ extension ScorePart: Codable {
         case partAbbreviationDisplay = "part-abbreviation-display"
         case group
         case scoreInstrument = "score-instrument"
+        case player
         case midiDevice = "midi-device"
         case midiInstrument = "midi-instrument"
     }
@@ -138,6 +139,7 @@ extension ScorePart: Codable {
         try container.encodeIfPresent(partAbbreviationDisplay, forKey: .partAbbreviationDisplay)
         try container.encodeIfPresent(group, forKey: .group)
         try container.encodeIfPresent(scoreInstrument, forKey: .scoreInstrument)
+        try container.encode(player, forKey: .player)
         
         if let midi = midi {
             for individualMidi in midi {
@@ -161,6 +163,7 @@ extension ScorePart: Codable {
         self.partAbbreviationDisplay = try container.decodeIfPresent(NameDisplay.self, forKey: .partAbbreviationDisplay)
         self.group = try container.decodeIfPresent([String].self, forKey: .group)
         self.scoreInstrument = try container.decodeIfPresent([ScoreInstrument].self, forKey: .scoreInstrument)
+        self.player = try container.decode([Player].self, forKey: .player)
         
         let midiDevice = try container.decodeIfPresent([MIDIDevice].self, forKey: .midiDevice)
         let midiInstrument = try container.decodeIfPresent([MIDIInstrument].self, forKey: .midiInstrument)
