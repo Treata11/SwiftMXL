@@ -5,12 +5,16 @@
 //  Created by James Bean on 5/15/19.
 //
 
-/// The lyric-font type specifies the default font for a particular name and number of lyric.
+/// The `lyric-font` type specifies the default font for a particular name and number of lyric.
 public struct LyricFont {
     // MARK: - Instance Properties
 
     // MARK: Attributes
-
+    
+    /// The lyric number for which this is the default,
+    /// corresponding to the number attribute in the `lyric` element.
+    ///
+    /// Substituted Int instead of NMTOKEN
     public let number: Int?
     public let name: String?
 
@@ -32,6 +36,7 @@ extension LyricFont: Codable {
     // MARK: - Codable
 
     private enum CodingKeys: String, CodingKey {
+        // FIXME: Number's codingKey change to "" in v4.0?
         case number
         case name
     }

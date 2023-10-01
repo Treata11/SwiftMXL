@@ -23,10 +23,10 @@ class FretTests: XCTestCase {
     }
     
     func testRoundTrip() throws {
-        let fret = Fret(
-            3, color: Color(hexValue: 0xFFFFFF),
-            font: Font(style: .italic, weight: .bold)
-        )
+//        let fret = Fret(
+//            3, color: Color(hexValue: 0xFFFFFF),
+//            font: Font(style: .italic, weight: .bold)
+//        )
         let fret_ = Fret(3)
         // FIXME: How to write a fret element with all of its attributes present in a String? (formatting)
         let xml = """
