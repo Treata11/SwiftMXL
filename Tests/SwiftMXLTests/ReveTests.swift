@@ -10,15 +10,19 @@ import XCTest
 import XMLCoder
 
 final class ReveTests: XCTestCase {
+    var decoder: XMLDecoder {
+        let decoder = XMLDecoder()
+        decoder.trimValueWhitespaces = false
+        decoder.removeWhitespaceElements = true
+        return decoder
+    }
+    var encoder: XMLEncoder {
+        let encoder = XMLEncoder()
+        encoder.outputFormatting = [.prettyPrinted]
+        return encoder
+    }
     /// Used to **fail**; `removeWhitespaceElements` was not set to `true`
     func testIdentification() throws {
-        var decoder: XMLDecoder {
-            let decoder = XMLDecoder()
-            decoder.trimValueWhitespaces = false
-            decoder.removeWhitespaceElements = true
-            return decoder
-        }
-        
         let xml = """
         <identification>
           <creator type="composer">Gabriel Fauré</creator>
@@ -450,7 +454,13 @@ final class ReveTests: XCTestCase {
             </score-part>
         </part-list>
         """
-        _ = try XMLDecoder().decode(PartList.self, from: xml.data(using: .utf8)!)
+        let decoded = try XMLDecoder().decode(PartList.self, from: xml.data(using: .utf8)!)
+        let encoded = try encoder.encode(decoded, withRootKey: "part-list")
+        
+        print("""
+        decoded: \n\(decoded)\n
+        encoded: \n\(String(data: encoded, encoding: .utf8)!)
+        """)
     }
 
     func testPrint() throws {

@@ -50,6 +50,10 @@ extension PartList: Equatable { }
 
 extension PartList: Codable {
     // MARK: - Codable
+    // FIXME: When a PartList data is encoded, `<parts>` is recorded as an element in the encoded data Not only parts does not have any codingKey, it should not leave out a linebreak in encoded data See ReveTests.testPartListDecoding()
+    enum CodingKeys: String, CodingKey {
+        case parts = ""
+    }
 
     // MARK: Decodable
 
@@ -137,5 +141,3 @@ extension PartList.Item: Codable {
 //        }
     }
 }
-
-//extension PartList.Item.CodingKeys: XMLChoiceCodingKey { }

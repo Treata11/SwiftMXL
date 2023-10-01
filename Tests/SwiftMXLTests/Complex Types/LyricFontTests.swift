@@ -18,7 +18,7 @@ class LyricFontTests: XCTestCase {
     }
     var encoder: XMLEncoder {
         let encoder = XMLEncoder()
-            encoder.outputFormatting = [.prettyPrinted]
+        encoder.outputFormatting = [.prettyPrinted]
         return encoder
     }
     

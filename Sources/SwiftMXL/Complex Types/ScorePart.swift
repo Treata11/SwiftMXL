@@ -72,10 +72,11 @@ public struct ScorePart {
     /// instrument names.
     public var scoreInstrument: [ScoreInstrument]?
     
+    // !!!: Is failing at roundtrips (encoding of the decoded xmlStrings)
     /// The `player` element allows for multiple players per `score-part`
     /// for use in listening applications. One player may play multiple instruments,
     /// while a single instrument may include multiple players in divisi sections.
-    public var player: [Player]
+//    public var player: [Player]?
 
     /// The `midi-device` type corresponds to the DeviceName meta event in Standard MIDI Files. Unlike
     /// the DeviceName meta event, there can be multiple `midi-device` elements per MusicXML part
@@ -89,7 +90,7 @@ public struct ScorePart {
 
     // MARK: - Initializers
 
-    public init(id: String, identification: Identification? = nil, link: [PartLink] = [], name: PartName, nameDisplay: NameDisplay? = nil, partAbbreviation: PartName? = nil, partAbbreviationDisplay: NameDisplay? = nil, group: [String]? = nil, scoreInstrument: [ScoreInstrument]? = nil, player: [Player] = [], midi: [MIDI]? = nil) {
+    public init(id: String, identification: Identification? = nil, link: [PartLink] = [], name: PartName, nameDisplay: NameDisplay? = nil, partAbbreviation: PartName? = nil, partAbbreviationDisplay: NameDisplay? = nil, group: [String]? = nil, scoreInstrument: [ScoreInstrument]? = nil, midi: [MIDI]? = nil) {
         self.id = id
         self.identification = identification
         self.link = link
@@ -99,7 +100,7 @@ public struct ScorePart {
         self.partAbbreviationDisplay = partAbbreviationDisplay
         self.group = group
         self.scoreInstrument = scoreInstrument
-        self.player = player
+//        self.player = player
         self.midi = midi
     }
 }
@@ -121,7 +122,7 @@ extension ScorePart: Codable {
         case partAbbreviationDisplay = "part-abbreviation-display"
         case group
         case scoreInstrument = "score-instrument"
-        case player
+//        case player
         case midiDevice = "midi-device"
         case midiInstrument = "midi-instrument"
     }
@@ -139,7 +140,7 @@ extension ScorePart: Codable {
         try container.encodeIfPresent(partAbbreviationDisplay, forKey: .partAbbreviationDisplay)
         try container.encodeIfPresent(group, forKey: .group)
         try container.encodeIfPresent(scoreInstrument, forKey: .scoreInstrument)
-        try container.encode(player, forKey: .player)
+//        try container.encode(player, forKey: .player)
         
         if let midi = midi {
             for individualMidi in midi {
@@ -163,7 +164,7 @@ extension ScorePart: Codable {
         self.partAbbreviationDisplay = try container.decodeIfPresent(NameDisplay.self, forKey: .partAbbreviationDisplay)
         self.group = try container.decodeIfPresent([String].self, forKey: .group)
         self.scoreInstrument = try container.decodeIfPresent([ScoreInstrument].self, forKey: .scoreInstrument)
-        self.player = try container.decode([Player].self, forKey: .player)
+//        self.player = try container.decode([Player].self, forKey: .player)
         
         let midiDevice = try container.decodeIfPresent([MIDIDevice].self, forKey: .midiDevice)
         let midiInstrument = try container.decodeIfPresent([MIDIInstrument].self, forKey: .midiInstrument)
