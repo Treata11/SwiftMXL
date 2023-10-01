@@ -24,24 +24,22 @@ public struct MIDIDevice {
 
     // MARK: Value
 
-    // !!!: Should value be optional<String>?
-    public var value: String
+    public var value: String?
 
     // MARK: - Initializers
 
-    public init(_ value: String = "", port: Int? = nil, id: String? = nil) {
+    public init(_ value: String? = nil, port: Int? = nil, id: String? = nil) {
         self.value = value
         self.port = port
         self.id = id
     }
 }
 
-extension MIDIDevice: Equatable { }
-
+extension MIDIDevice: Equatable {}
 extension MIDIDevice: Codable {
     // MARK: - Codable
 
-    enum CodingKeys: String, CodingKey, XMLChoiceCodingKey {
+    enum CodingKeys: String, CodingKey {
         case id
         case port
         case value = ""
