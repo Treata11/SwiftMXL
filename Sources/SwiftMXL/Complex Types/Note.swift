@@ -11,7 +11,7 @@
 /// duration element. Cue notes have a duration element, as do forward elements, but no tie
 /// elements. Having these two types of information available can make interchange considerably
 /// easier, as some programs handle one type of information much more readily than the other.
-public struct Note {
+public struct Note: Equatable {
     // MARK: - Instance Properties
 
     // MARK: Attributes
@@ -187,10 +187,12 @@ extension Note {
     }
 }
 
+// MARK: - Note Extensions
+
 extension Note {
     // MARK: Kinds of `Note`
 
-    public struct Normal {
+    public struct Normal: Equatable {
         public let isChord: Bool
         public let pitchUnpitchedOrRest: PitchUnpitchedOrRest
         public let duration: Int
@@ -209,7 +211,7 @@ extension Note {
         }
     }
 
-    public struct Cue {
+    public struct Cue: Equatable {
         public let isChord: Bool
         public let pitchUnpitchedOrRest: PitchUnpitchedOrRest
         public let duration: Int
@@ -225,7 +227,7 @@ extension Note {
         }
     }
 
-    public struct Grace {
+    public struct Grace: Equatable {
         public let isChord: Bool
         public let pitchUnpitchedOrRest: PitchUnpitchedOrRest
         public let ties: Ties
@@ -240,98 +242,8 @@ extension Note {
             self.ties = ties
         }
     }
-
-    public enum Kind: Equatable {
-        case normal(Normal)
-        case cue(Cue)
-        case grace(Grace)
-    }
 }
 
-extension Note.Kind: Codable {
-    // MARK: - Codable
-
-    public enum CodingKeys: String, CodingKey {
-        // Normal Note, Cue and Grace
-        case grace
-        case cue
-        case chord
-        case duration
-        case tie
-    }
-
-    // MARK: Decodable
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        // Decode kind
-
-        // Only `normal` and `grace` notes have ties, so defer `Tie` parsing and initialization
-        // until we know we need them.
-        func ties() throws -> Ties {
-            return Ties(ties: try container.decode([Tie].self, forKey: .tie))
-        }
-
-        // Only `normal` and `cue` notes have durations, so defer `duration` parsing until we know
-        // we need it.
-        func duration() throws -> Int {
-            return try container.decode(Int.self, forKey: .duration)
-        }
-
-        // The `Note` is a chord if it contains an empty `<chord/>` element.
-        let isChord = container.contains(.chord)
-
-        let pitchUnpitchedOrRest = try PitchUnpitchedOrRest(from: decoder)
-
-        if container.contains(.grace) {
-            self = .grace(
-                Note.Grace(pitchUnpitchedOrRest, ties: try ties(), chord: isChord)
-            )
-        } else if container.contains(.cue) {
-            self = .cue(
-                Note.Cue(pitchUnpitchedOrRest, duration: try duration(), isChord: isChord)
-            )
-        } else {
-            self = .normal(
-                Note.Normal(pitchUnpitchedOrRest,
-                            duration: try duration(),
-                            ties: try ties(),
-                            isChord: isChord)
-            )
-        }
-    }
-
-    // MARK: Encodable
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        switch self {
-        case let .cue(cue):
-            try container.encode(Empty(), forKey: .cue)
-            if cue.isChord { try container.encode(Empty(), forKey: .chord) }
-            try cue.pitchUnpitchedOrRest.encode(to: encoder)
-            try container.encode(cue.duration, forKey: .duration)
-        case let .grace(grace):
-            try container.encode(Empty(), forKey: .grace)
-            if grace.isChord { try container.encode(Empty(), forKey: .chord) }
-            try grace.pitchUnpitchedOrRest.encode(to: encoder)
-            try container.encodeIfPresent(grace.ties.start, forKey: .tie)
-            try container.encodeIfPresent(grace.ties.stop, forKey: .tie)
-        case let .normal(normal):
-            if normal.isChord { try container.encode(Empty(), forKey: .chord) }
-            try normal.pitchUnpitchedOrRest.encode(to: encoder)
-            try container.encode(normal.duration, forKey: .duration)
-            try container.encodeIfPresent(normal.ties.start, forKey: .tie)
-            try container.encodeIfPresent(normal.ties.stop, forKey: .tie)
-        }
-    }
-}
-
-extension Note.Normal: Equatable {}
-extension Note.Cue: Equatable {}
-extension Note.Grace: Equatable {}
-
-extension Note: Equatable {}
 extension Note: Codable {
     // MARK: - Codable
 
@@ -442,6 +354,95 @@ extension Note: Codable {
         try container.encodeIfPresent(YesNo(pizzicato), forKey: .pizzicato)
 
         try kind.encode(to: encoder)
+    }
+}
+
+// MARK: - Note.Kind
+
+extension Note {
+    public enum Kind: Equatable {
+        case normal(Normal)
+        case cue(Cue)
+        case grace(Grace)
+    }
+}
+
+extension Note.Kind: Codable {
+    // MARK: - Codable
+
+    public enum CodingKeys: String, CodingKey, XMLChoiceCodingKey {
+        // Normal Note, Cue and Grace
+        case grace
+        case cue
+        case chord
+        case duration
+        case tie
+    }
+
+    // MARK: Decodable
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        // Decode kind
+
+        // Only `normal` and `grace` notes have ties, so defer `Tie` parsing and initialization
+        // until we know we need them.
+        func ties() throws -> Ties {
+            return Ties(ties: try container.decode([Tie].self, forKey: .tie))
+        }
+
+        // Only `normal` and `cue` notes have durations, so defer `duration` parsing until we know
+        // we need it.
+        func duration() throws -> Int {
+            return try container.decode(Int.self, forKey: .duration)
+        }
+
+        // The `Note` is a chord if it contains an empty `<chord/>` element.
+        let isChord = container.contains(.chord)
+
+        let pitchUnpitchedOrRest = try PitchUnpitchedOrRest(from: decoder)
+
+        if container.contains(.grace) {
+            self = .grace(
+                Note.Grace(pitchUnpitchedOrRest, ties: try ties(), chord: isChord)
+            )
+        } else if container.contains(.cue) {
+            self = .cue(
+                Note.Cue(pitchUnpitchedOrRest, duration: try duration(), isChord: isChord)
+            )
+        } else {
+            self = .normal(
+                Note.Normal(pitchUnpitchedOrRest,
+                            duration: try duration(),
+                            ties: try ties(),
+                            isChord: isChord)
+            )
+        }
+    }
+
+    // MARK: Encodable
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case let .cue(cue):
+            try container.encode(Empty(), forKey: .cue)
+            if cue.isChord { try container.encode(Empty(), forKey: .chord) }
+            try cue.pitchUnpitchedOrRest.encode(to: encoder)
+            try container.encode(cue.duration, forKey: .duration)
+        case let .grace(grace):
+            try container.encode(Empty(), forKey: .grace)
+            if grace.isChord { try container.encode(Empty(), forKey: .chord) }
+            try grace.pitchUnpitchedOrRest.encode(to: encoder)
+            try container.encodeIfPresent(grace.ties.start, forKey: .tie)
+            try container.encodeIfPresent(grace.ties.stop, forKey: .tie)
+        case let .normal(normal):
+            if normal.isChord { try container.encode(Empty(), forKey: .chord) }
+            try normal.pitchUnpitchedOrRest.encode(to: encoder)
+            try container.encode(normal.duration, forKey: .duration)
+            try container.encodeIfPresent(normal.ties.start, forKey: .tie)
+            try container.encodeIfPresent(normal.ties.stop, forKey: .tie)
+        }
     }
 }
 

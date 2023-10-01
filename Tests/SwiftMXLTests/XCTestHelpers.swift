@@ -19,11 +19,22 @@ extension XCTestCase {
         rootKey: String = "container",
         loggingEncoded: Bool = false
     ) throws {
-        let encoder = XMLEncoder()
-        encoder.outputFormatting = .prettyPrinted
+        var encoder: XMLEncoder {
+            let encoder = XMLEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            return encoder
+        }
         let encoded = try encoder.encode(value, withRootKey: rootKey)
         if loggingEncoded { print(String(data: encoded, encoding: .utf8)!) }
         let decoded = try XMLDecoder().decode(Value.self, from: encoded)
+        
+        print("""
+        encoded: 
+        \(String(data: encoded, encoding: .utf8)!)
+        encoded: \(String(describing: encoded))
+        decoded description: \(decoded)
+        """)
+        
         XCTAssertEqual(decoded, value)
     }
 }
