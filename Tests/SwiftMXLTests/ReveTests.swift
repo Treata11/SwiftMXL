@@ -10,6 +10,7 @@ import XCTest
 import XMLCoder
 
 final class ReveTests: XCTestCase {
+    /// Used to **fail**; `removeWhitespaceElements` was not set to `true`
     func testIdentification() throws {
         var decoder: XMLDecoder {
             let decoder = XMLDecoder()

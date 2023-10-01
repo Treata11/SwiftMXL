@@ -24,11 +24,12 @@ public struct MIDIDevice {
 
     // MARK: Value
 
-    public var value: String?
+    // !!!: Should value be optional<String>?
+    public var value: String
 
     // MARK: - Initializers
 
-    public init(_ value: String? = nil, port: Int? = nil, id: String? = nil) {
+    public init(_ value: String = "", port: Int? = nil, id: String? = nil) {
         self.value = value
         self.port = port
         self.id = id

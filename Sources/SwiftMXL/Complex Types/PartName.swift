@@ -5,9 +5,9 @@
 //  Created by James Bean on 5/28/19.
 //
 
-/// The part-name type describes the name or abbreviation of a score-part element. Formatting
-/// attributes for the part-name element are deprecated in Version 2.0 in favor of the new
-/// part-name-display and part-abbreviation-display elements.
+/// The `part-name` and `part-abbreviation` elements describe the name and abbreviation
+/// of a `score-part` element, respectively. Formatting attributes for these elements were deprecated
+/// in **Version 2.0** in favor of the `part-name-display` and `part-abbreviation-display` elements.
 public struct PartName {
     // MARK: - Instance Properties
 
@@ -21,7 +21,7 @@ public struct PartName {
     public var printStyle: PrintStyle
 
     // MARK: Value
-
+    /// Content
     public var value: String
 
     // MARK: - Initializers
@@ -29,8 +29,8 @@ public struct PartName {
     public init(
         _ value: String,
         printStyle: PrintStyle = PrintStyle(),
-        printObject: Bool? = nil,
-        justify: Justify? = nil
+        justify: Justify? = nil,
+        printObject: Bool? = nil
     ) {
         self.value = value
         self.printStyle = printStyle
