@@ -5,6 +5,8 @@
 //  Created by James Bean on 5/15/19.
 //
 
+// FIXME: Missing `fret` in Attributes?
+
 /// The barre element indicates placing a finger over multiple strings on a single fret. The type is
 /// "start" for the lowest pitched string (e.g., the string with the highest MusicXML number) and is
 /// "stop" for the highest pitched string.
