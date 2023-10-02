@@ -7,6 +7,7 @@
 
 import SwiftMXL
 import XCTest
+import XMLCoder
 
 class HelloWorld: XCTestCase {
     func testHelloWorldDecoding() throws {
@@ -49,7 +50,8 @@ class HelloWorld: XCTestCase {
           </part>
         </score-partwise>
         """
-        let decoded = try Score(string: xml)
+        let decoded_ = try? Score(string: xml)
+        let decoded = try! XMLDecoder().decode(Partwise.self, from: xml.data(using: .utf8)!)
 
         // Create the note
         let note = Note(pitch: Pitch(step: .c, octave: 4), duration: 4, type: .whole)
@@ -79,7 +81,15 @@ class HelloWorld: XCTestCase {
         )
         // Create the score
         let score: Score = .partwise(traversal)
+        
+        print("""
+        HelloWorld.decoded: \n\(decoded)
+        ------------------------------------------------------------------------
+        HelloWorld.score: \n\(score)
+        ------------------------------------------------------------------------
+        """)
 
-        XCTAssertEqual(decoded, score)
+        XCTAssertEqual(decoded_, score)
+//        XCTAssertEqual(decoded, decoded_)
     }
 }

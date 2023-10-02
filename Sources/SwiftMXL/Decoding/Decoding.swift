@@ -16,6 +16,7 @@ extension Score {
         case invalidMusicXMLString(Swift.String)
     }
 
+// MARK: - From String
     /// Creates a `MusicXML` model from the given MusicXML-formatted `string`.
     public init(string: Swift.String) throws {
         guard let data = string.data(using: .utf8) else {
@@ -25,20 +26,53 @@ extension Score {
         try self.init(data: data)
     }
 
+// MARK: - From URL
     /// Creates a `MusicXML` model from the given MusicXML-formatted file at the given `url`.
     public init(url: URL) throws {
         try self.init(data: try Data(contentsOf: url))
     }
 
+// MARK: - From Data
     /// Creates a `MusicXML` model from the given MusicXML-formatted `data`.
     public init(data: Data) throws {
-        let decoder = XMLDecoder(trimValueWhitespaces: false)
+        var tag: Score.CodingKeys?
+        let decoder = XMLDecoder(trimValueWhitespaces: false, removeWhitespaceElements: true)
 
         if let topLevelTag = Score.probeTopLevelTag(data: data) {
             decoder.userInfo[CodingUserInfoKey(rawValue: Score.topLevelTagKey)!] = topLevelTag
+            tag = topLevelTag
+            
+            print("""
+            topLevelTag: \n\(topLevelTag)
+            decoder: \n\(decoder)
+            tag: \n\(tag!.stringValue)
+            --------------------------------------------------------------------
+            """)
         }
-
-        self = try decoder.decode(Score.self, from: data)
+        
+// FIXME: Type must be extracted out of the topLevelTag
+        /*self = try decoder.decode(Score.self, from: data)*/   // bogus
+//        let decodedPartwise = try decoder.decode(Partwise.self, from: data)
+//        self = .partwise(decodedPartwise)
+// TODO: Here we should check the type with `topLevelTag` and since it's either .partwise or .timewise, we create an (do catch) statement to create a self with either one of those cases.
+        
+        if tag?.stringValue == "score-partwise" {
+            let decodedPartwise = try decoder.decode(Partwise.self, from: data)
+            print("Decoding.decodedPartwise: \n\(decodedPartwise)\n")
+            self = .partwise(decodedPartwise)
+        } else if tag?.stringValue == "score-timewise" {
+            let decodedTimewise = try decoder.decode(Timewise.self, from: data)
+            print("Decoding.decodedTimewise: \n\(decodedTimewise)\n")
+            self = .timewise(decodedTimewise)
+        } else {
+            throw DecodingError.typeMismatch(
+                Score.self,
+                DecodingError.Context(
+                    codingPath: [Score.CodingKeys.partwise, Score.CodingKeys.timewise],
+                    debugDescription: "Decoding from data failed; Unrecognized choice"
+                )
+            )
+        }
     }
 
     // A data probe that reads 64 bytes each pass to try to find the top level tag within the MusicXML
@@ -177,25 +211,25 @@ class ParserBase : NSObject, XMLParserDelegate  {
 
 ///import XMLCoder
 
-struct MusicXMLDecoder {
-    
-    static func decode<T: Decodable>(type: T.Type, from url: URL) throws -> T {
-        let string = try String(contentsOf: url)
-        let data = string.data(using: .utf8)!
-        let decoder = XMLDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return try decoder.decode(type, from: data)
-    }
-}
-
-struct Encoding_: Codable {
-    let software: String?
-    let encodingDate: String?
-    let supports: [Supports]?
-    
-    enum CodingKeys: String, CodingKey {
-        case software = "software"
-        case encodingDate = "encoding-date"
-        case supports = "supports"
-    }
-}
+//struct MusicXMLDecoder {
+//    
+//    static func decode<T: Decodable>(type: T.Type, from url: URL) throws -> T {
+//        let string = try String(contentsOf: url)
+//        let data = string.data(using: .utf8)!
+//        let decoder = XMLDecoder()
+//        decoder.keyDecodingStrategy = .convertFromSnakeCase
+//        return try decoder.decode(type, from: data)
+//    }
+//}
+//
+//struct Encoding_: Codable {
+//    let software: String?
+//    let encodingDate: String?
+//    let supports: [Supports]?
+//    
+//    enum CodingKeys: String, CodingKey {
+//        case software = "software"
+//        case encodingDate = "encoding-date"
+//        case supports = "supports"
+//    }
+//}
