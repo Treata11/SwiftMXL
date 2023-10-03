@@ -11,11 +11,13 @@ import XCTest
 class LilyPondTests: XCTestCase {
     func testAll() throws {
         let rootDir = try! prepareResultsDirectory()
+        
         publishResultsDirectoryLocation(rootDir)
+        
         for traversal in ["Partwise", "Timewise"] {
-            let resultsDir = try prepareResultsDirectoryForTraversal(traversal, in: rootDir)
+            let resultsDir = try! prepareResultsDirectoryForTraversal(traversal, in: rootDir)
             let sourceDir = testSuiteURL.appendingPathComponent(traversal, isDirectory: true)
-            let sources = try FileManager.default.contentsOfDirectory(atPath: sourceDir.path)
+            let sources = try! FileManager.default.contentsOfDirectory(atPath: sourceDir.path)
             let sanitizedSources = sources.lazy
                 .filter { $0.hasSuffix("xml") }
                 .filter { !blacklist.contains($0) }
@@ -24,10 +26,12 @@ class LilyPondTests: XCTestCase {
                 let sourceURL = sourceDir.appendingPathComponent(source)
                 do {
                     let start = now()
+                    // !!!: Fails to decode the Score.
                     let parsed = try Score(url: sourceURL)
                     let duration = now() - start
 
                     publishSuccessfulParsing(for: "\(traversal)/\(source)", in: duration)
+                    
                     let resultFileURL = resultsDir.appendingPathComponent("\(source).parsed")
                     try! String(describing: parsed).write(
                         to: resultFileURL,
