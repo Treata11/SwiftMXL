@@ -10,6 +10,7 @@ import XCTest
 import XMLCoder
 
 class HelloWorld: XCTestCase {
+    /// Used to **fail**; Decoding.swift implementations were incomplete.
     func testHelloWorldDecoding() throws {
         let xml = """
         <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -82,12 +83,12 @@ class HelloWorld: XCTestCase {
         // Create the score
         let score: Score = .partwise(traversal)
         
-        print("""
-        HelloWorld.decoded: \n\(decoded)
-        ------------------------------------------------------------------------
-        HelloWorld.score: \n\(score)
-        ------------------------------------------------------------------------
-        """)
+//        print("""
+//        HelloWorld.decoded: \n\(decoded)
+//        ------------------------------------------------------------------------
+//        HelloWorld.score: \n\(score)
+//        ------------------------------------------------------------------------
+//        """)
 
         XCTAssertEqual(decoded_, score)
 //        XCTAssertEqual(decoded, decoded_)

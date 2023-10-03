@@ -20,7 +20,6 @@ extension Score {
     /// Creates a `MusicXML` model from the given MusicXML-formatted `string`.
     public init(string: Swift.String) throws {
         guard let data = string.data(using: .utf8) else {
-            // !!!: The data couldn’t be read because it isn’t in the correct format.
             throw Error.invalidMusicXMLString(string)
         }
         try self.init(data: data)
@@ -34,6 +33,9 @@ extension Score {
 
 // MARK: - From Data
     /// Creates a `MusicXML` model from the given MusicXML-formatted `data`.
+    ///
+    /// > Used to **fail**; **`.partwise`** & **`.timewise`** decoding cases were not handled seperately;
+    /// > `removeWhitespaceElements` was not set **true** on the `decoder`
     public init(data: Data) throws {
         var tag: Score.CodingKeys?
         let decoder = XMLDecoder(trimValueWhitespaces: false, removeWhitespaceElements: true)
@@ -46,7 +48,6 @@ extension Score {
             topLevelTag: \n\(topLevelTag)
             decoder: \n\(decoder)
             tag: \n\(tag!.stringValue)
-            --------------------------------------------------------------------
             """)
         }
         
@@ -58,11 +59,17 @@ extension Score {
         
         if tag?.stringValue == "score-partwise" {
             let decodedPartwise = try decoder.decode(Partwise.self, from: data)
-            print("Decoding.decodedPartwise: \n\(decodedPartwise)\n")
+            print("""
+                  Decoding.decodedPartwisely
+                  --------------------------------------------------------------------
+                  """)
             self = .partwise(decodedPartwise)
         } else if tag?.stringValue == "score-timewise" {
             let decodedTimewise = try decoder.decode(Timewise.self, from: data)
-            print("Decoding.decodedTimewise: \n\(decodedTimewise)\n")
+            print("""
+            Decoding.decodedTimewisely
+            --------------------------------------------------------------------
+            """)
             self = .timewise(decodedTimewise)
         } else {
             throw DecodingError.typeMismatch(
@@ -147,89 +154,3 @@ extension Score {
     }
     
 }
-
-// MARK: - ParserBase
-
-// TODO: New File
-// Base class that is used to consume foundCharacters via the parser
-class ParserBase : NSObject, XMLParserDelegate  {
-
-    var currentElement = ""
-    var foundCharacters = ""
-    weak var parent: ParserBase? = nil
-
-    func parser(
-        _ parser: XMLParser,
-        didStartElement elementName: String,
-        namespaceURI: String?,
-        qualifiedName qName: String?,
-        attributes attributeDict: [String : String]
-    ) {
-
-        currentElement = elementName
-    }
-
-    func parser(_ parser: XMLParser, foundCharacters string: String) {
-        if (string.trimmingCharacters(in: .whitespacesAndNewlines) != "") {
-            foundCharacters += string
-        }
-        
-    }
-}
-
-// MARK: - ParserManager
-
-//class ParserManager {
-//    let url: URL = Bundle.main.url(forResource: "Chant" , withExtension: "musicxml")!
-//
-//    init() { }
-//
-//    func parseFromUrl(url: URL) -> ScorePartwise? {
-////        guard url.startAccessingSecurityScopedResource() else { return nil }
-//        print("URL EXT 2 \(url)")
-//
-//        do {
-//            let string = try String(contentsOf: url)
-//            let data = string.data(using: .utf8)!
-//            let parser = XMLParser(data: data)
-//
-//            let score = ScorePartwise
-//            parser.delegate = score
-//
-//            parser.parse()
-////            url.stopAccessingSecurityScopedResource()
-//            return score
-//            //print("SCORE: \(score.work.workTitle)")
-//        } catch {
-//            print(error.localizedDescription)
-//        }
-//        return nil
-//    }
-//}
-
-// MARK: - ScoreModel
-
-///import XMLCoder
-
-//struct MusicXMLDecoder {
-//    
-//    static func decode<T: Decodable>(type: T.Type, from url: URL) throws -> T {
-//        let string = try String(contentsOf: url)
-//        let data = string.data(using: .utf8)!
-//        let decoder = XMLDecoder()
-//        decoder.keyDecodingStrategy = .convertFromSnakeCase
-//        return try decoder.decode(type, from: data)
-//    }
-//}
-//
-//struct Encoding_: Codable {
-//    let software: String?
-//    let encodingDate: String?
-//    let supports: [Supports]?
-//    
-//    enum CodingKeys: String, CodingKey {
-//        case software = "software"
-//        case encodingDate = "encoding-date"
-//        case supports = "supports"
-//    }
-//}

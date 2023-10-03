@@ -203,6 +203,7 @@ extension Time {
     public struct Signature {
         // MARK: - Instance Properties
 
+        // TODO: both have to be a type that decodes the values in string & returns the results from that string
         /// The `beats` element indicates the number of beats, as found in the numerator of a time signature.
         let beats: Int
         /// The `beat-type` element indicates the beat unit, as found in the denominator of a time signature.

@@ -26,6 +26,16 @@ class LilyPondTests: XCTestCase {
                 let sourceURL = sourceDir.appendingPathComponent(source)
                 do {
                     let start = now()
+
+                    // Read the contents of the XML file
+                    let fileData = try! String(contentsOf: sourceURL)
+                    print("""
+                    
+                    ____________________________________________________________
+                    sourceURL: \(sourceURL)\n
+                    sourceURL.path: \n\(sourceURL.path())\n
+                    fileData: \n\(fileData)
+                    """)
                     // !!!: Fails to decode the Score.
                     let parsed = try Score(url: sourceURL)
                     let duration = now() - start
