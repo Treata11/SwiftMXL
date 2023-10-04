@@ -131,6 +131,22 @@ extension Time: Codable {
         case hAlign = "halign"
         case vAlign = "valign"
         case printObject = "print-object"
+        case kind = ""  // bogus!
+    }
+    
+    // MARK: Encodable
+    // FIXME: Handle `Kind` so that <kind> is not presented in the encoded xml
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(kind, forKey: .kind)
+        try container.encodeIfPresent(number, forKey: .number)
+        try container.encodeIfPresent(symbol, forKey: .symbol)
+        try container.encodeIfPresent(separator, forKey: .separator)
+//        try container.encode(printStyle, forKey: .printStyle)
+        try container.encodeIfPresent(hAlign, forKey: .hAlign)
+        try container.encodeIfPresent(vAlign, forKey: .vAlign)
+        try container.encodeIfPresent(printObject, forKey: .printObject)
     }
 
     // MARK: Decodable
@@ -138,6 +154,7 @@ extension Time: Codable {
     public init(from decoder: Decoder) throws {
         // Decode attributes
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        
         self.number = try container.decodeIfPresent(Int.self, forKey: .number)
         self.symbol = try container.decodeIfPresent(TimeSymbol.self, forKey: .symbol)
         self.separator = try container.decodeIfPresent(TimeSeparator.self, forKey: .separator)
@@ -162,9 +179,11 @@ extension Time: Codable {
             )
         } catch {
             let unmeasuredKindContainer = try decoder.container(keyedBy: Unmeasured.CodingKeys.self)
+//            let unmeasuredKindContainer = try decoder.singleValueContainer()
             self.kind = .unmeasured(
                 Time.Unmeasured(
                     symbol: try unmeasuredKindContainer.decodeIfPresent(String.self, forKey: .symbol)
+//                    symbol: try unmeasuredKindContainer.decode(String.self)
                 )
             )
         }
@@ -290,6 +309,18 @@ extension Time.Measured: Codable {
         case signature
         case interchangeable
     }
+    
+    // MARK: Encodable
+    /// terminates the redundant `<signature>` & `<interchangeable>` in the encoded data
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        
+        do {
+            try container.encode(signature)
+        } catch {
+            try container.encode(interchangeable)
+        }
+    }
 
     // MARK: Decodable
 
@@ -321,20 +352,30 @@ extension Time.Kind: Equatable {}
 extension Time.Kind: Codable {
     // MARK: - Codable
 
-    enum CodingKeys: String, XMLChoiceCodingKey {
+    enum CodingKeys: String, CodingKey {
         case measured
         case unmeasured
     }
 
     // MARK: Encodable
-
+    /// terminate the redundant `<measured>` & `<unmeasured>` keys in the encoded data
     public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
+//        var container = encoder.container(keyedBy: CodingKeys.self)
+//        
+//        switch self {
+//        case let .measured(value):
+//            try container.encode(value, forKey: .measured)
+//        case let .unmeasured(value):
+//            try container.encode(value, forKey: .unmeasured)
+//        }
+    
+        var container = encoder.singleValueContainer()
+        
         switch self {
         case let .measured(value):
-            try container.encode(value, forKey: .measured)
+            try container.encode(value)
         case let .unmeasured(value):
-            try container.encode(value, forKey: .unmeasured)
+            try container.encode(value)
         }
     }
 
@@ -342,6 +383,7 @@ extension Time.Kind: Codable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        
         do {
             print("""
             **Time.Kind**
@@ -355,5 +397,11 @@ extension Time.Kind: Codable {
             """)
             self = .unmeasured(try container.decode(Time.Unmeasured.self, forKey: .unmeasured))
         }
+    }
+}
+
+extension Time.Kind: DynamicNodeEncoding {
+    static public func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
+        return .element
     }
 }

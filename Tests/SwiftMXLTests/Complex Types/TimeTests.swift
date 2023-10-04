@@ -96,12 +96,14 @@ class TimeTests: XCTestCase {
         // the decoding works fine for both.
         let expected = Time("1", "8", symbol: .singleNumber)
         let encoded = try! encoder.encode(decoded, withRootKey: "time")
+        let expectedEncoded = try! encoder.encode(expected, withRootKey: "time")
         
         print("""
         TimeTests:
-        decoded: \n\(decoded)
-        encoded: \n\(String(data: encoded, encoding: .utf8) ?? "nil")
-        expected: \n\(expected)
+        decoded: \n\(decoded)\n
+        encoded: \n\(String(data: encoded, encoding: .utf8) ?? "nil")\n
+        expected: \n\(expected)\n
+        expectedEncoded: \n\(String(data: expectedEncoded, encoding: .utf8)!)
         ------------------------------------------------------------------------
         """)
         XCTAssertEqual(decoded, expected)
