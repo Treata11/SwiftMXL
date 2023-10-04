@@ -76,8 +76,8 @@ extension Time {
     ///     let _ = Time(3, 16, staff: 3)
     ///
     public init(
-        _ beats: Int,
-        _ beatType: Int,
+        _ beats: String,
+        _ beatType: String,
         number: Int? = nil,
         symbol: TimeSymbol? = nil,
         seperator: TimeSeparator? = nil,
@@ -153,8 +153,8 @@ extension Time: Codable {
             self.kind = .measured(
                 Time.Measured(
                     signature: Signature(
-                        beats: try signatureContainer.decode(Int.self, forKey: .beats),
-                        beatType: try signatureContainer.decode(Int.self, forKey: .beatType)
+                        beats: try signatureContainer.decode(String.self, forKey: .beats),
+                        beatType: try signatureContainer.decode(String.self, forKey: .beatType)
                     ),
                     interchangeable: try measuredKindContainer.decodeIfPresent(Interchangeable.self,
                                                                        forKey: .interchangeable)
@@ -205,11 +205,11 @@ extension Time {
 
         // TODO: both have to be a type that decodes the values in string & returns the results from that string
         /// The `beats` element indicates the number of beats, as found in the numerator of a time signature.
-        let beats: Int
+        let beats: String
         /// The `beat-type` element indicates the beat unit, as found in the denominator of a time signature.
-        let beatType: Int
+        let beatType: String
 
-        public init(beats: Int, beatType: Int) {
+        public init(beats: String, beatType: String) {
             self.beats = beats
             self.beatType = beatType
         }
@@ -296,8 +296,8 @@ extension Time.Measured: Codable {
     public init(from decoder: Decoder) throws {
         let signatureContainer = try decoder.container(keyedBy: Time.Signature.CodingKeys.self)
         self.signature = Time.Signature(
-            beats: try signatureContainer.decode(Int.self, forKey: .beats),
-            beatType: try signatureContainer.decode(Int.self, forKey: .beatType)
+            beats: try signatureContainer.decode(String.self, forKey: .beats),
+            beatType: try signatureContainer.decode(String.self, forKey: .beatType)
         )
         let container = try decoder.container(keyedBy: Time.Measured.CodingKeys.self)
         self.interchangeable = try container.decodeIfPresent(Interchangeable.self, forKey: .interchangeable)

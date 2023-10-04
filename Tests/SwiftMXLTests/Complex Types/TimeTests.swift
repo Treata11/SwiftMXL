@@ -24,7 +24,7 @@ class TimeTests: XCTestCase {
         </time>
         """
         let decoded = try! XMLDecoder().decode(Time.Measured.self, from: xml.data(using: .utf8)!)
-        let expected = Time.Measured(signature: Time.Signature(beats: 4, beatType: 4))
+        let expected = Time.Measured(signature: Time.Signature(beats: "4", beatType: "4"))
         let encoded = try! encoder.encode(decoded, withRootKey: "time")
         
         print("""
@@ -45,7 +45,7 @@ class TimeTests: XCTestCase {
         """
         let decoded = try! XMLDecoder().decode(Time.self, from: xml.data(using: .utf8)!)
         // Time.Measured
-        let expected = Time(4, 4, symbol: .common)
+        let expected = Time("4", "4", symbol: .common)
         let encoded = try! encoder.encode(decoded, withRootKey: "time")
         
         print("""
@@ -64,15 +64,16 @@ class TimeTests: XCTestCase {
           <beat-type>8</beat-type>
         </time>
         """
-        let decoded = try! XMLDecoder(trimValueWhitespaces: false, removeWhitespaceElements: true)
+        let decoded = try XMLDecoder(trimValueWhitespaces: false, removeWhitespaceElements: true)
             .decode(Time.self, from: xml.data(using: .utf8)!)
         // Time.Measured
-        let expected = Time(3+2, 8, symbol: .singleNumber)
+        let expected = Time("3+2", "8", symbol: .singleNumber)
         let encoded = try! encoder.encode(decoded, withRootKey: "time")
         
         print("""
         TimeTests:
         decoded: \n\(decoded)
+        expected: \n\(expected)
         encoded: \n\(String(data: encoded, encoding: .utf8) ?? "nil")
         ------------------------------------------------------------------------
         """)
@@ -90,8 +91,10 @@ class TimeTests: XCTestCase {
         """
         let decoded = try! XMLDecoder(trimValueWhitespaces: false, removeWhitespaceElements: true)
             .decode(Time.self, from: xml.data(using: .utf8)!)
-        // Time.Measured
-        let expected = Time(1, 8, symbol: .singleNumber)
+        // Time.Measured(signature: Time.Signature(beats: 1, beatType: 8)) works
+        // but the following does not function to encode the beats & beatType.
+        // the decoding works fine for both.
+        let expected = Time("1", "8", symbol: .singleNumber)
         let encoded = try! encoder.encode(decoded, withRootKey: "time")
         
         print("""

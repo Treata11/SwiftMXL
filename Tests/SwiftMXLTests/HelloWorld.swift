@@ -60,7 +60,7 @@ class HelloWorld: XCTestCase {
         let attributes = Attributes(
             divisions: 1,
             keys: [Key(fifths: 0)],
-            times: [Time(4, 4)],
+            times: [Time("4", "4")],
             clefs: [Clef(sign: .g, line: 2)]
         )
         // Create the measure

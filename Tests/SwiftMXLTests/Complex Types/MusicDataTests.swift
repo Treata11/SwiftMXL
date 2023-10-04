@@ -51,7 +51,7 @@ class MusicDataTests: XCTestCase {
                             kind: .traditional(Key.Traditional(fifths: 0, mode: .major))
                         ),
                     ],
-                    times: [Time(4, 4, symbol: .common)],
+                    times: [Time("4", "4", symbol: .common)],
                     clefs: [Clef(sign: .g, line: 2)]
                 )
             ),

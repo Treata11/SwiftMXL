@@ -55,7 +55,7 @@ class PartwiseMeasureTests: XCTestCase {
                     Attributes(
                         divisions: 1,
                         keys: [Key(fifths: 0, mode: .major)],
-                        times: [Time(4, 4, symbol: .common)],
+                        times: [Time("4", "4", symbol: .common)],
                         clefs: [Clef(sign: .g, line: 2)],
                         transpose: [Transpose(diatonic: 2, chromatic: 3)]
                     )
@@ -130,7 +130,7 @@ class PartwiseMeasureTests: XCTestCase {
                     Attributes(
                         divisions: 1,
                         keys: [Key(fifths: 0, mode: .major)],
-                        times: [Time(4, 4, symbol: .common)],
+                        times: [Time("4", "4", symbol: .common)],
                         clefs: [Clef(sign: .g, line: 2)]
                     )
                 ),
