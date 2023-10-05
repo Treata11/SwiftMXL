@@ -305,7 +305,7 @@ extension Time.Measured: Codable {
     // MARK: Codable
 
     enum CodingKeys: String, CodingKey {
-        case signature
+        case signature = ""
         case interchangeable
     }
     
@@ -324,11 +324,9 @@ extension Time.Measured: Codable {
     // MARK: Decodable
 
     public init(from decoder: Decoder) throws {
-        let signatureContainer = try decoder.container(keyedBy: Time.Signature.CodingKeys.self)
-        self.signature = Time.Signature(
-            beats: try signatureContainer.decode(String.self, forKey: .beats),
-            beatType: try signatureContainer.decode(String.self, forKey: .beatType)
-        )
+        let singleValue = try decoder.singleValueContainer()
+    
+        self.signature = try singleValue.decode(Time.Signature.self)
         let container = try decoder.container(keyedBy: Time.Measured.CodingKeys.self)
         self.interchangeable = try container.decodeIfPresent(Interchangeable.self, forKey: .interchangeable)
     }

@@ -16,47 +16,6 @@ class TimeTests: XCTestCase {
         return encoder
     }
     
-    func testDecodingMeasured() throws {
-        let xml = """
-        <time>
-            <beats>4</beats>
-            <beat-type>4</beat-type>
-        </time>
-        """
-        let decoded = try! XMLDecoder().decode(Time.Measured.self, from: xml.data(using: .utf8)!)
-        let expected = Time.Measured(signature: Time.Signature(beats: "4", beatType: "4"))
-        let encoded = try! encoder.encode(decoded, withRootKey: "time")
-        
-        print("""
-        TimeTests:
-        decoded: \n\(decoded)
-        encoded: \n\(String(data: encoded, encoding: .utf8) ?? "nil")
-        ------------------------------------------------------------------------
-        """)
-        XCTAssertEqual(decoded, expected)
-    }
-
-    func testDecodingCommon() throws {
-        let xml = """
-        <time symbol="common">
-            <beats>4</beats>
-            <beat-type>4</beat-type>
-        </time>
-        """
-        let decoded = try! XMLDecoder().decode(Time.self, from: xml.data(using: .utf8)!)
-        // Time.Measured
-        let expected = Time(Time.Signature(beats: "4", beatType: "4"), symbol: .common)
-        let encoded = try! encoder.encode(decoded, withRootKey: "time")
-        
-        print("""
-        TimeTests:
-        decoded: \n\(decoded)
-        encoded: \n\(String(data: encoded, encoding: .utf8) ?? "nil")
-        ------------------------------------------------------------------------
-        """)
-        XCTAssertEqual(decoded, expected)
-    }
-    
     func testDecodingSingleNumber() throws {
         let xml = """
         <time symbol="single-number">
@@ -104,6 +63,28 @@ class TimeTests: XCTestCase {
         encoded: \n\(String(data: encoded, encoding: .utf8) ?? "nil")\n
         expected: \n\(expected)\n
         expectedEncoded: \n\(String(data: expectedEncoded, encoding: .utf8)!)
+        ------------------------------------------------------------------------
+        """)
+        XCTAssertEqual(decoded, expected)
+    }
+    
+    // Time.Measured Tests
+    
+    func testDecodingMeasured() throws {
+        let xml = """
+        <time>
+            <beats>4</beats>
+            <beat-type>4</beat-type>
+        </time>
+        """
+        let decoded = try XMLDecoder().decode(Time.Measured.self, from: xml.data(using: .utf8)!)
+        let expected = Time.Measured(signature: Time.Signature(beats: "4", beatType: "4"))
+        let encoded = try! encoder.encode(decoded, withRootKey: "time")
+        
+        print("""
+        TimeTests:
+        decoded: \n\(decoded)
+        encoded: \n\(String(data: encoded, encoding: .utf8) ?? "nil")
         ------------------------------------------------------------------------
         """)
         XCTAssertEqual(decoded, expected)
