@@ -45,7 +45,7 @@ class TimeTests: XCTestCase {
         """
         let decoded = try! XMLDecoder().decode(Time.self, from: xml.data(using: .utf8)!)
         // Time.Measured
-        let expected = Time("4", "4", symbol: .common)
+        let expected = Time(Time.Signature(beats: "4", beatType: "4"), symbol: .common)
         let encoded = try! encoder.encode(decoded, withRootKey: "time")
         
         print("""
@@ -67,7 +67,7 @@ class TimeTests: XCTestCase {
         let decoded = try XMLDecoder(trimValueWhitespaces: false, removeWhitespaceElements: true)
             .decode(Time.self, from: xml.data(using: .utf8)!)
         // Time.Measured
-        let expected = Time("3+2", "8", symbol: .singleNumber)
+        let expected = Time(Time.Signature(beats: "3+2", beatType: "8"), symbol: .singleNumber)
         let encoded = try! encoder.encode(decoded, withRootKey: "time")
         
         print("""
@@ -94,7 +94,7 @@ class TimeTests: XCTestCase {
         // Time.Measured(signature: Time.Signature(beats: 1, beatType: 8)) works
         // but the following does not function to encode the beats & beatType.
         // the decoding works fine for both.
-        let expected = Time("1", "8", symbol: .singleNumber)
+        let expected = Time(Time.Signature(beats: "1", beatType: "8"), symbol: .singleNumber)
         let encoded = try! encoder.encode(decoded, withRootKey: "time")
         let expectedEncoded = try! encoder.encode(expected, withRootKey: "time")
         

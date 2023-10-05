@@ -16,7 +16,7 @@ import XMLCoder
 /// but not printed, as is the case for excerpts from the middle of a score. The value is **"yes"** if
 /// not present.
 public struct Time {
-    // MARK: - Instance Properties
+    // MARK: Instance Properties
 
     // MARK: Attributes
 
@@ -66,7 +66,7 @@ public struct Time {
 // MARK: - Time Extensions
 
 extension Time {
-    // MARK: - Initializers
+    // MARK: Initializers
     
     /// Creates a `Measured` type `Time`.
     ///
@@ -76,8 +76,7 @@ extension Time {
     ///     let _ = Time(3, 16, staff: 3)
     ///
     public init(
-        _ beats: String,
-        _ beatType: String,
+        _ signature: Signature,
         number: Int? = nil,
         symbol: TimeSymbol? = nil,
         seperator: TimeSeparator? = nil,
@@ -88,7 +87,7 @@ extension Time {
         self.symbol = symbol
         self.kind = .measured(
             Measured(
-                signature: Time.Signature(beats: beats, beatType: beatType),
+                signature: signature,
                 interchangeable: interchangeable
             )
         )
@@ -220,7 +219,7 @@ extension Time: DynamicNodeEncoding {
 extension Time {
     // MARK: - Signature
     public struct Signature {
-        // MARK: - Instance Properties
+        // MARK: Instance Properties
 
         // TODO: both have to be a type that decodes the values in string & returns the results from that string
         /// The `beats` element indicates the number of beats, as found in the numerator of a time signature.
@@ -252,7 +251,7 @@ extension Time {
     /// > available compared to the time element's symbol attribute,
     /// > which applies to the first of the dual time signatures.
     public struct Measured {
-        // MARK: - Instance Properties
+        // MARK: Instance Properties
 
         // FIXME: Handle multiple time signatures in Time.Measured
         var signature: Signature
@@ -271,7 +270,7 @@ extension Time {
     /// > The time element's `symbol` attribute is not used when a
     /// > `senza-misura` element is present.
     public struct Unmeasured {
-        // MARK: - Instance Properties
+        // MARK: Instance Properties
 
         let symbol: String?
 
@@ -291,7 +290,7 @@ extension Time {
 
 extension Time.Signature: Equatable {}
 extension Time.Signature: Codable {
-    // MARK: - Codable
+    // MARK: Codable
 
     enum CodingKeys: String, CodingKey {
         case beats
@@ -303,7 +302,7 @@ extension Time.Signature: Codable {
 
 extension Time.Measured: Equatable {}
 extension Time.Measured: Codable {
-    // MARK: - Codable
+    // MARK: Codable
 
     enum CodingKeys: String, CodingKey {
         case signature
@@ -339,7 +338,7 @@ extension Time.Measured: Codable {
 
 extension Time.Unmeasured: Equatable {}
 extension Time.Unmeasured: Codable {
-    // MARK: - Codable
+    // MARK: Codable
 
     enum CodingKeys: String, CodingKey {
         case symbol
@@ -350,7 +349,7 @@ extension Time.Unmeasured: Codable {
 
 extension Time.Kind: Equatable {}
 extension Time.Kind: Codable {
-    // MARK: - Codable
+    // MARK: Codable
 
     enum CodingKeys: String, CodingKey {
         case measured
