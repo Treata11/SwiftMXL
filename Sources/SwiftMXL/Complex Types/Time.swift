@@ -76,7 +76,7 @@ extension Time {
     ///     let _ = Time(3, 16, staff: 3)
     ///
     public init(
-        _ signature: Signature,
+        _ signature: [Signature],
         number: Int? = nil,
         symbol: TimeSymbol? = nil,
         seperator: TimeSeparator? = nil,
@@ -87,7 +87,7 @@ extension Time {
         self.symbol = symbol
         self.kind = .measured(
             Measured(
-                signature: signature,
+                signature,
                 interchangeable: interchangeable
             )
         )
@@ -168,10 +168,10 @@ extension Time: Codable {
             let signatureContainer = try decoder.container(keyedBy: Signature.CodingKeys.self)
             self.kind = .measured(
                 Time.Measured(
-                    signature: Signature(
+                    [Signature(
                         beats: try signatureContainer.decode([String].self, forKey: .beats),
                         beatType: try signatureContainer.decode([String].self, forKey: .beatType)
-                    ),
+                    )],
                     interchangeable: try measuredKindContainer.decodeIfPresent(Interchangeable.self,
                                                                        forKey: .interchangeable)
                 )
@@ -252,12 +252,12 @@ extension Time {
     public struct Measured {
         // MARK: Instance Properties
 
-        // FIXME: Handle multiple time signatures in Time.Measured
-        var signature: Signature
+        // FIXME:
+        var values: [Time.Signature]
         var interchangeable: Interchangeable?
 
-        public init(signature: Signature, interchangeable: Interchangeable? = nil) {
-            self.signature = signature
+        public init(_ values: [Time.Signature], interchangeable: Interchangeable? = nil) {
+            self.values = values
             self.interchangeable = interchangeable
         }
     }
@@ -302,9 +302,7 @@ extension Time.Signature: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         if container.contains(.beats) {
-            _ = try container.decodeNil(forKey: .beats)
             self.beats = try container.decode([String].self, forKey: .beats)
-            _ = try container.decodeNil(forKey: .beatType)
             self.beatType = try container.decode([String].self, forKey: .beatType)
         } else {
             throw DecodingError.typeMismatch(
@@ -315,6 +313,41 @@ extension Time.Signature: Codable {
                 )
             )
         }
+    }
+}
+
+extension Time.Measured: Sequence {
+    public func makeIterator() -> AnyIterator<Void> {
+        var index = 0
+        
+        return AnyIterator {
+            defer { index += 1 }
+            
+            switch index {
+            case 0:
+                return ()
+            default:
+                return nil
+            }
+        }
+    }
+}
+
+public struct Signature: Collection {
+    public typealias Element = Void
+    public typealias Index = Int
+    
+    public var startIndex: Index { 0 }
+    public var endIndex: Index { 1 }
+    
+    public func index(after i: Index) -> Index {
+        precondition(i == startIndex, "Signature index out of range")
+        return i + 1
+    }
+    
+    public subscript(position: Index) -> Element {
+        precondition(indices.contains(position), "Signature index out of range")
+        return ()
     }
 }
 
@@ -335,7 +368,7 @@ extension Time.Measured: Codable {
         var container = encoder.singleValueContainer()
         
         do {
-            try container.encode(signature)
+            try values.forEach { try $0.encode(to: encoder) }
         } catch {
             try container.encode(interchangeable)
         }
@@ -348,11 +381,11 @@ extension Time.Measured: Codable {
         let signatureContainer = try decoder.container(keyedBy: Time.Signature.CodingKeys.self)
 //        let singleValue = try decoder.singleValueContainer()
     
-//        self.signature = try singleValue.decode(Time.Signature.self)
-        self.signature = Time.Signature(
+//        self.signature = try singleValue.decode([Time.Signature].self)
+        self.values = [Time.Signature(
             beats: try signatureContainer.decode([String].self, forKey: .beats),
             beatType: try signatureContainer.decode([String].self, forKey: .beatType)
-        )
+        )]
         self.interchangeable = try container.decodeIfPresent(Interchangeable.self, forKey: .interchangeable)
     }
 }

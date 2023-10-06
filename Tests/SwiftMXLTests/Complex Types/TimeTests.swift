@@ -53,7 +53,10 @@ class TimeTests: XCTestCase {
         // Time.Measured(signature: Time.Signature(beats: 1, beatType: 8)) works
         // but the following does not function to encode the beats & beatType.
         // the decoding works fine for both.
-        let expected = Time(Time.Signature(beats: ["1", "2"], beatType: ["8", "4"]), symbol: .singleNumber)
+        let expected = Time(
+            [Time.Signature(beats: ["1"], beatType: ["8"]), Time.Signature(beats: ["2"], beatType: ["4"])],
+            symbol: .singleNumber
+        )
         let encoded = try! encoder.encode(decoded, withRootKey: "time")
         let expectedEncoded = try! encoder.encode(expected, withRootKey: "time")
         
@@ -73,12 +76,14 @@ class TimeTests: XCTestCase {
     func testDecodingMeasured() throws {
         let xml = """
         <time>
-            <beats>4</beats>
+            <beats>3</beats>
             <beat-type>4</beat-type>
+            <beats>1</beats>
+            <beat-type>8</beat-type>
         </time>
         """
         let decoded = try XMLDecoder().decode(Time.Measured.self, from: xml.data(using: .utf8)!)
-        let expected = Time.Measured(signature: Time.Signature(beats: ["4"], beatType: ["4"]))
+        let expected = Time.Measured([Time.Signature(beats: ["3"], beatType: ["4"]), Time.Signature(beats: ["1"], beatType: ["8"])])
         let encoded = try! encoder.encode(decoded, withRootKey: "time")
         
         print("""
