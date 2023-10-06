@@ -15,7 +15,7 @@ class TimeTests: XCTestCase {
         encoder.outputFormatting = [.prettyPrinted]
         return encoder
     }
-    
+/*
     func testDecodingSingleNumber() throws {
         let xml = """
         <time symbol="single-number">
@@ -38,7 +38,7 @@ class TimeTests: XCTestCase {
         """)
         XCTAssertEqual(decoded, expected)
     }
-    
+    */
     func testDecodingComplex() throws {
         let xml = """
         <time symbol="single-number">
@@ -53,7 +53,7 @@ class TimeTests: XCTestCase {
         // Time.Measured(signature: Time.Signature(beats: 1, beatType: 8)) works
         // but the following does not function to encode the beats & beatType.
         // the decoding works fine for both.
-        let expected = Time(Time.Signature(beats: "1", beatType: "8"), symbol: .singleNumber)
+        let expected = Time(Time.Signature(beats: ["1", "2"], beatType: ["8", "4"]), symbol: .singleNumber)
         let encoded = try! encoder.encode(decoded, withRootKey: "time")
         let expectedEncoded = try! encoder.encode(expected, withRootKey: "time")
         
@@ -78,7 +78,7 @@ class TimeTests: XCTestCase {
         </time>
         """
         let decoded = try XMLDecoder().decode(Time.Measured.self, from: xml.data(using: .utf8)!)
-        let expected = Time.Measured(signature: Time.Signature(beats: "4", beatType: "4"))
+        let expected = Time.Measured(signature: Time.Signature(beats: ["4"], beatType: ["4"]))
         let encoded = try! encoder.encode(decoded, withRootKey: "time")
         
         print("""

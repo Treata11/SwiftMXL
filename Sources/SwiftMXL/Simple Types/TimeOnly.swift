@@ -10,9 +10,9 @@
 /// integers arranged in ascending order, indicating which times through the repeated section that
 /// the element applies.
 public struct TimeOnly {
-    // > The value is a comma-separated list of
-    // > positive integers arranged in ascending order, indicating which
-    // > times through the repeated section that the element applies.
+    /// > The value is a comma-separated list of
+    /// > positive integers arranged in ascending order, indicating which
+    /// > times through the repeated section that the element applies.
     public let values: [Int]
 }
 

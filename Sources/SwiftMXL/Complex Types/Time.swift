@@ -169,8 +169,8 @@ extension Time: Codable {
             self.kind = .measured(
                 Time.Measured(
                     signature: Signature(
-                        beats: try signatureContainer.decode(String.self, forKey: .beats),
-                        beatType: try signatureContainer.decode(String.self, forKey: .beatType)
+                        beats: try signatureContainer.decode([String].self, forKey: .beats),
+                        beatType: try signatureContainer.decode([String].self, forKey: .beatType)
                     ),
                     interchangeable: try measuredKindContainer.decodeIfPresent(Interchangeable.self,
                                                                        forKey: .interchangeable)
@@ -221,13 +221,12 @@ extension Time {
     public struct Signature {
         // MARK: Instance Properties
 
-        // TODO: both have to be a type that decodes the values in string & returns the results from that string
         /// The `beats` element indicates the number of beats, as found in the numerator of a time signature.
-        let beats: String
+        let beats: [String]
         /// The `beat-type` element indicates the beat unit, as found in the denominator of a time signature.
-        let beatType: String
+        let beatType: [String]
 
-        public init(beats: String, beatType: String) {
+        public init(beats: [String], beatType: [String]) {
             self.beats = beats
             self.beatType = beatType
         }
@@ -296,6 +295,27 @@ extension Time.Signature: Codable {
         case beats
         case beatType = "beat-type"
     }
+    
+    // MARK: Decodable
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        if container.contains(.beats) {
+            _ = try container.decodeNil(forKey: .beats)
+            self.beats = try container.decode([String].self, forKey: .beats)
+            _ = try container.decodeNil(forKey: .beatType)
+            self.beatType = try container.decode([String].self, forKey: .beatType)
+        } else {
+            throw DecodingError.typeMismatch(
+                Time.Signature.self,
+                DecodingError.Context(
+                    codingPath: decoder.codingPath,
+                    debugDescription: "Unrecognized choice"
+                )
+            )
+        }
+    }
 }
 
 // MARK: - .Measured Extensions
@@ -305,7 +325,7 @@ extension Time.Measured: Codable {
     // MARK: Codable
 
     enum CodingKeys: String, CodingKey {
-        case signature = ""
+        case signature
         case interchangeable
     }
     
@@ -324,13 +344,30 @@ extension Time.Measured: Codable {
     // MARK: Decodable
 
     public init(from decoder: Decoder) throws {
-        let singleValue = try decoder.singleValueContainer()
-    
-        self.signature = try singleValue.decode(Time.Signature.self)
         let container = try decoder.container(keyedBy: Time.Measured.CodingKeys.self)
+        let signatureContainer = try decoder.container(keyedBy: Time.Signature.CodingKeys.self)
+//        let singleValue = try decoder.singleValueContainer()
+    
+//        self.signature = try singleValue.decode(Time.Signature.self)
+        self.signature = Time.Signature(
+            beats: try signatureContainer.decode([String].self, forKey: .beats),
+            beatType: try signatureContainer.decode([String].self, forKey: .beatType)
+        )
         self.interchangeable = try container.decodeIfPresent(Interchangeable.self, forKey: .interchangeable)
     }
 }
+
+//extension Time.Measured: ExpressibleByArrayLiteral {
+//    public init(arrayLiteral signature: Time.Signature...) {
+//        self.signature = signature
+//    }
+//}
+//
+//extension Time.Measured: ExpressibleByStringLiteral {
+//    public init(stringLiteral signature: Time.Signature) {
+//        self.signature = [signature]
+//    }
+//}
 
 // MARK: - .Unmeasured Extensions
 
