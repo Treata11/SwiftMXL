@@ -301,10 +301,13 @@ class DirectionsTests: XCTestCase {
         let xml = """
         <dynamics>
            <other-dynamics>abc-ffz</other-dynamics>
+            <other-dynamics>spfz</other-dynamics>
+            <sfzp></sfzp>
+            <sfp></sfp>
         </dynamics>
         """
         let decoded = try XMLDecoder().decode(Dynamics.self, from: xml.data(using: .utf8)!)
-        let expected = Dynamics([.other("abc-ffz")])
+        let expected = Dynamics([.other("abc-ffz"), .other("spfz"), .sfzp, .sfp])
         XCTAssertEqual(decoded, expected)
     }
 

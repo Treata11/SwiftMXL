@@ -15,7 +15,7 @@ class TimeTests: XCTestCase {
         encoder.outputFormatting = [.prettyPrinted]
         return encoder
     }
-/*
+
     func testDecodingSingleNumber() throws {
         let xml = """
         <time symbol="single-number">
@@ -26,7 +26,7 @@ class TimeTests: XCTestCase {
         let decoded = try XMLDecoder(trimValueWhitespaces: false, removeWhitespaceElements: true)
             .decode(Time.self, from: xml.data(using: .utf8)!)
         // Time.Measured
-        let expected = Time(Time.Signature(beats: "3+2", beatType: "8"), symbol: .singleNumber)
+        let expected = Time([Time.Signature(beats: ["3+2"], beatType: ["8"])], symbol: .singleNumber)
         let encoded = try! encoder.encode(decoded, withRootKey: "time")
         
         print("""
@@ -38,7 +38,7 @@ class TimeTests: XCTestCase {
         """)
         XCTAssertEqual(decoded, expected)
     }
-    */
+    
     func testDecodingComplex() throws {
         let xml = """
         <time symbol="single-number">
@@ -71,7 +71,7 @@ class TimeTests: XCTestCase {
         XCTAssertEqual(decoded, expected)
     }
     
-    // Time.Measured Tests
+    // MARK: - Time.Measured Tests
     
     func testDecodingMeasured() throws {
         let xml = """

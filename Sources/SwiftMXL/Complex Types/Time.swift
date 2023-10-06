@@ -15,6 +15,8 @@ import XMLCoder
 /// only one `beat/beat-type` pair. The `print-object` attribute allows a time signature to be specified
 /// but not printed, as is the case for excerpts from the middle of a score. The value is **"yes"** if
 /// not present.
+///
+/// > FIXME: See [Issue#2](https://github.com/Treata11/SwiftMXL/issues/2)
 public struct Time {
     // MARK: Instance Properties
 
@@ -166,12 +168,13 @@ extension Time: Codable {
             // FIXME: Audit containers in Time.init(from: Decoder)
             let measuredKindContainer = try decoder.container(keyedBy: Measured.CodingKeys.self)
             let signatureContainer = try decoder.container(keyedBy: Signature.CodingKeys.self)
+            let beats = try signatureContainer.decode([String].self, forKey: .beats)
+            let beatTypes = try signatureContainer.decode([String].self, forKey: .beatType)
+            let signatures = zip(beats, beatTypes).map { Time.Signature(beats: [$0], beatType: [$1]) }
+            
             self.kind = .measured(
                 Time.Measured(
-                    [Signature(
-                        beats: try signatureContainer.decode([String].self, forKey: .beats),
-                        beatType: try signatureContainer.decode([String].self, forKey: .beatType)
-                    )],
+                    signatures,
                     interchangeable: try measuredKindContainer.decodeIfPresent(Interchangeable.self,
                                                                        forKey: .interchangeable)
                 )
@@ -219,8 +222,6 @@ extension Time: DynamicNodeEncoding {
 extension Time {
     // MARK: - Signature
     public struct Signature {
-        // MARK: Instance Properties
-
         /// The `beats` element indicates the number of beats, as found in the numerator of a time signature.
         let beats: [String]
         /// The `beat-type` element indicates the beat unit, as found in the denominator of a time signature.
@@ -250,8 +251,6 @@ extension Time {
     /// > available compared to the time element's symbol attribute,
     /// > which applies to the first of the dual time signatures.
     public struct Measured {
-        // MARK: Instance Properties
-
         // FIXME:
         var values: [Time.Signature]
         var interchangeable: Interchangeable?
@@ -269,8 +268,6 @@ extension Time {
     /// > The time element's `symbol` attribute is not used when a
     /// > `senza-misura` element is present.
     public struct Unmeasured {
-        // MARK: Instance Properties
-
         let symbol: String?
 
         public init(symbol: String? = nil) {
@@ -316,40 +313,40 @@ extension Time.Signature: Codable {
     }
 }
 
-extension Time.Measured: Sequence {
-    public func makeIterator() -> AnyIterator<Void> {
-        var index = 0
-        
-        return AnyIterator {
-            defer { index += 1 }
-            
-            switch index {
-            case 0:
-                return ()
-            default:
-                return nil
-            }
-        }
-    }
-}
-
-public struct Signature: Collection {
-    public typealias Element = Void
-    public typealias Index = Int
-    
-    public var startIndex: Index { 0 }
-    public var endIndex: Index { 1 }
-    
-    public func index(after i: Index) -> Index {
-        precondition(i == startIndex, "Signature index out of range")
-        return i + 1
-    }
-    
-    public subscript(position: Index) -> Element {
-        precondition(indices.contains(position), "Signature index out of range")
-        return ()
-    }
-}
+//extension Time.Signature: Sequence {
+//    public func makeIterator() -> AnyIterator<Void> {
+//        var index = 0
+//        
+//        return AnyIterator {
+//            defer { index += 1 }
+//            
+//            switch index {
+//            case 0:
+//                return ()
+//            default:
+//                return nil
+//            }
+//        }
+//    }
+//}
+//
+//extension Time.Signature: Collection {
+//    public typealias Element = Void
+//    public typealias Index = Int
+//    
+//    public var startIndex: Index { 0 }
+//    public var endIndex: Index { 1 }
+//    
+//    public func index(after i: Index) -> Index {
+//        precondition(i == startIndex, "Signature index out of range")
+//        return i + 1
+//    }
+//    
+//    public subscript(position: Index) -> Element {
+//        precondition(indices.contains(position), "Signature index out of range")
+//        return ()
+//    }
+//}
 
 // MARK: - .Measured Extensions
 
@@ -358,7 +355,7 @@ extension Time.Measured: Codable {
     // MARK: Codable
 
     enum CodingKeys: String, CodingKey {
-        case signature
+//        case signature
         case interchangeable
     }
     
@@ -379,28 +376,15 @@ extension Time.Measured: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: Time.Measured.CodingKeys.self)
         let signatureContainer = try decoder.container(keyedBy: Time.Signature.CodingKeys.self)
-//        let singleValue = try decoder.singleValueContainer()
+        let beats = try signatureContainer.decode([String].self, forKey: .beats)
+        let beatTypes = try signatureContainer.decode([String].self, forKey: .beatType)
+        let signatures = zip(beats, beatTypes).map { Time.Signature(beats: [$0], beatType: [$1]) }
     
-//        self.signature = try singleValue.decode([Time.Signature].self)
-        self.values = [Time.Signature(
-            beats: try signatureContainer.decode([String].self, forKey: .beats),
-            beatType: try signatureContainer.decode([String].self, forKey: .beatType)
-        )]
+        self.values = signatures
+//        self.values = try decoder.collectArray()
         self.interchangeable = try container.decodeIfPresent(Interchangeable.self, forKey: .interchangeable)
     }
 }
-
-//extension Time.Measured: ExpressibleByArrayLiteral {
-//    public init(arrayLiteral signature: Time.Signature...) {
-//        self.signature = signature
-//    }
-//}
-//
-//extension Time.Measured: ExpressibleByStringLiteral {
-//    public init(stringLiteral signature: Time.Signature) {
-//        self.signature = [signature]
-//    }
-//}
 
 // MARK: - .Unmeasured Extensions
 

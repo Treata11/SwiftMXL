@@ -52,7 +52,7 @@ class HelloWorld: XCTestCase {
         </score-partwise>
         """
         let decoded_ = try? Score(string: xml)
-        let decoded = try! XMLDecoder().decode(Partwise.self, from: xml.data(using: .utf8)!)
+//        let decoded = try! XMLDecoder().decode(Partwise.self, from: xml.data(using: .utf8)!)
 
         // Create the note
         let note = Note(pitch: Pitch(step: .c, octave: 4), duration: 4, type: .whole)
@@ -60,7 +60,7 @@ class HelloWorld: XCTestCase {
         let attributes = Attributes(
             divisions: 1,
             keys: [Key(fifths: 0)],
-            times: [Time("4", "4")],
+            times: [Time( [Time.Signature(beats: ["4"], beatType: ["4"])] )],
             clefs: [Clef(sign: .g, line: 2)]
         )
         // Create the measure
@@ -94,3 +94,4 @@ class HelloWorld: XCTestCase {
 //        XCTAssertEqual(decoded, decoded_)
     }
 }
+
