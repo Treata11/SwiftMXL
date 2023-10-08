@@ -102,6 +102,13 @@ extension Partwise.Measure: Codable {
     private enum CodingKeys: String, CodingKey {
         case musicData
     }
+    
+    // MARK: Encodable
+    
+    public func encode(to encoder: Encoder) throws {
+        try attributes.encode(to: encoder)
+        try musicData.forEach { try $0.encode(to: encoder) }
+    }
 
     // MARK: Decodable
 
@@ -109,11 +116,6 @@ extension Partwise.Measure: Codable {
         self.attributes = try MeasureAttributes(from: decoder)
         let container = try decoder.singleValueContainer()
         self.musicData = try container.decode([MusicData].self)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        try attributes.encode(to: encoder)
-        try musicData.forEach { try $0.encode(to: encoder) }
     }
 }
 

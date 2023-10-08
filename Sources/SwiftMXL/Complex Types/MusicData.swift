@@ -7,10 +7,10 @@
 
 import XMLCoder
 
-// <!ENTITY % music-data
-//   "(note | backup | forward | direction | attributes |
-//     harmony | figured-bass | print | sound | barline |
-//     grouping | link | bookmark)*">
+/// <!ENTITY % music-data
+///   "(note | backup | forward | direction | attributes |
+///     harmony | figured-bass | print | sound | barline |
+///     grouping | link | bookmark)*">
 public enum MusicData {
     case note(Note)
     case backup(Backup)

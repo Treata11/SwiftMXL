@@ -55,7 +55,6 @@ extension Score {
         /*self = try decoder.decode(Score.self, from: data)*/   // bogus
 //        let decodedPartwise = try decoder.decode(Partwise.self, from: data)
 //        self = .partwise(decodedPartwise)
-// TODO: Here we should check the type with `topLevelTag` and since it's either .partwise or .timewise, we create an (do catch) statement to create a self with either one of those cases.
         
         if tag?.stringValue == "score-partwise" {
             let decodedPartwise = try decoder.decode(Partwise.self, from: data)
