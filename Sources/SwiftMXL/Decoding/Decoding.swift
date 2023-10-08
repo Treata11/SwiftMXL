@@ -11,7 +11,6 @@ import XMLCoder
 extension Score {
     public static let topLevelTagKey = "topLevelTagKey"
 
-    // !!!: It's always failing!
     public enum Error: Swift.Error {
         case invalidMusicXMLString(Swift.String)
     }
@@ -51,19 +50,14 @@ extension Score {
             """)
         }
         
-// FIXME: Type must be extracted out of the topLevelTag
-        /*self = try decoder.decode(Score.self, from: data)*/   // bogus
-//        let decodedPartwise = try decoder.decode(Partwise.self, from: data)
-//        self = .partwise(decodedPartwise)
-        
-        if tag?.stringValue == "score-partwise" {
+        if tag == Score.CodingKeys.partwise {
             let decodedPartwise = try decoder.decode(Partwise.self, from: data)
             print("""
                   Decoding.decodedPartwisely
                   --------------------------------------------------------------------
                   """)
             self = .partwise(decodedPartwise)
-        } else if tag?.stringValue == "score-timewise" {
+        } else if tag == Score.CodingKeys.timewise {
             let decodedTimewise = try decoder.decode(Timewise.self, from: data)
             print("""
             Decoding.decodedTimewisely
@@ -75,13 +69,19 @@ extension Score {
                 Score.self,
                 DecodingError.Context(
                     codingPath: [Score.CodingKeys.partwise, Score.CodingKeys.timewise],
-                    debugDescription: "Decoding from data failed; Unrecognized choice"
+                    debugDescription: """
+                    Decoding from data failed; neither partwise nor timewise traversal was recognized
+                    tag: \(String(describing: tag))
+                    \(String(describing: decoder.userInfo[CodingUserInfoKey(rawValue: Score.topLevelTagKey)!]))
+                    """
                 )
             )
         }
     }
+    
+    // FIXME: There might be problems with the following funcs while attempting to find the toplvl tag in older versions of MusicXML
 
-    // A data probe that reads 64 bytes each pass to try to find the top level tag within the MusicXML
+    /// A data probe that reads 64 bytes each pass to try to find the top level tag within the MusicXML
     private static func probeTopLevelTag(data: Data) -> Score.CodingKeys? {
         let input = InputStream(data: data)
         input.open()
@@ -120,7 +120,7 @@ extension Score {
         return nil
     }
 
-    // Find top level tag provided with a pattern and a string, the pattern should contain exactly one capture group
+    /// Find top level tag provided with a pattern and a string, the pattern should contain exactly one capture group
     private static func findTopLevelTag(pattern: String, in string: String) -> Score.CodingKeys? {
         do {
             let regex = try NSRegularExpression(pattern: pattern, options: [])
@@ -133,23 +133,4 @@ extension Score {
             return nil
         }
     }
-    
-// MARK: - HearMeOut
-    
-//    func decodeScoreFrom(_ url: URL) {
-//        measureIndex = 0
-//        originalScore = parserManager.parseFromUrl(url: url)
-//        generateStaffDictionary()
-//
-//        generateFocusArray()
-//    }
-    
-    static func decode<T: Decodable>(type: T.Type, from url: URL) throws -> T {
-        let string = try String(contentsOf: url)
-        let data = string.data(using: .utf8)!
-        let decoder = XMLDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return try decoder.decode(type, from: data)
-    }
-    
 }
