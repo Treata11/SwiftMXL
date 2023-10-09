@@ -313,41 +313,6 @@ extension Time.Signature: Codable {
     }
 }
 
-//extension Time.Signature: Sequence {
-//    public func makeIterator() -> AnyIterator<Void> {
-//        var index = 0
-//        
-//        return AnyIterator {
-//            defer { index += 1 }
-//            
-//            switch index {
-//            case 0:
-//                return ()
-//            default:
-//                return nil
-//            }
-//        }
-//    }
-//}
-//
-//extension Time.Signature: Collection {
-//    public typealias Element = Void
-//    public typealias Index = Int
-//    
-//    public var startIndex: Index { 0 }
-//    public var endIndex: Index { 1 }
-//    
-//    public func index(after i: Index) -> Index {
-//        precondition(i == startIndex, "Signature index out of range")
-//        return i + 1
-//    }
-//    
-//    public subscript(position: Index) -> Element {
-//        precondition(indices.contains(position), "Signature index out of range")
-//        return ()
-//    }
-//}
-
 // MARK: - .Measured Extensions
 
 extension Time.Measured: Equatable {}
@@ -436,16 +401,8 @@ extension Time.Kind: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         do {
-            print("""
-            **Time.Kind**
-            decoded measured: \n\(try container.decode(Time.Measured.self, forKey: .measured))\n
-            """)
             self = .measured(try container.decode(Time.Measured.self, forKey: .measured))
         } catch {
-            print("""
-            **Time.Kind**
-            decoded unmeasured: \n\(try container.decode(Time.Unmeasured.self, forKey: .unmeasured))\n
-            """)
             self = .unmeasured(try container.decode(Time.Unmeasured.self, forKey: .unmeasured))
         }
     }

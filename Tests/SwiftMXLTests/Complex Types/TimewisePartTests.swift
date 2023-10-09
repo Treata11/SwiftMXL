@@ -98,14 +98,6 @@ class TimewiseTests: XCTestCase {
             parts: [part]
         )
         
-        print("""
-        decoded: \n\(decoded)
-        --------------------
-        expected: \n\(expected)
-        --------------------
-        encoded: \n
-        ------------------------------------------------------------------------
-        """)
         XCTAssertEqual(decoded, expected)
     }
 }

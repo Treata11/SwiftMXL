@@ -60,7 +60,7 @@ extension Encoding {
                 /// underlyingError: nil
                 /// )
         /// )
-    public enum Kind: Equatable {
+    public enum Kind {
         case software(String)
         case date(String)
         case supports(Supports)
@@ -69,7 +69,7 @@ extension Encoding {
     }
 }
 
-//extension Encoding.Kind: Equatable {}
+extension Encoding.Kind: Equatable {}
 
 extension Encoding.Kind: Codable {
     // MARK: - Codable
@@ -104,21 +104,10 @@ extension Encoding.Kind: Codable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-//        let singleValue = try decoder.singleValueContainer()
-//        let decodedXML = try singleValue.decode(String.self)
-//        let decodedContainer = try singleValue.decode([String: String].self)
 
         func decode <T>(_ key: CodingKeys) throws -> T where T: Codable {
             return try container.decode(T.self, forKey: key)
         }
-        
-        print("""
-        decoder: \(try String(from: decoder))
-        container: \(container)
-        decoder.singleValueContainer: \(try decoder.singleValueContainer())
-        """)
-        
-        // decoder.unkeyedContainer(): \(try decoder.unkeyedContainer())
         
         if container.contains(.encoder) {
             self = .encoder(try decode(.encoder))
@@ -131,15 +120,6 @@ extension Encoding.Kind: Codable {
         } else if container.contains(.supports) {
             self = .supports(try decode(.supports))
         } else {
-//            print("decodedXML: \(decodedXML)")
-//            print("decodedContainer: \(decodedContainer)")
-            print("""
-            Container Contains \(CodingKeys.encoder.stringValue): \(container.contains(.encoder))
-            Container Contains \(CodingKeys.date.stringValue): \(container.contains(.date))
-            Container Contains \(CodingKeys.description.stringValue): \(container.contains(.date))
-            Container Contains \(CodingKeys.software.stringValue): \(container.contains(CodingKeys.software))
-            Container Contains \(CodingKeys.supports.stringValue): \(container.contains(CodingKeys.supports))
-            """)
             throw DecodingError.typeMismatch(
                 Encoding.Kind.self,
                 DecodingError.Context(

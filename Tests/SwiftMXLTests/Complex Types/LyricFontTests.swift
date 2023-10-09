@@ -34,17 +34,10 @@ class LyricFontTests: XCTestCase {
             </lyric-font>
         """
         // font-style="italic" font-weight="bold"
-        let encoded_ = try! encoder.encode(lyricFont, withRootKey: "lyric-font")
+//        let encoded_ = try! encoder.encode(lyricFont, withRootKey: "lyric-font")
         let decoded = try! decoder.decode(LyricFont.self, from: xml.data(using: .utf8)!)
         let encoded = try! encoder.encode(decoded, withRootKey: "lyric-font")
         let decoded2 = try? decoder.decode(LyricFont.self, from: encoded)
-        
-        print("""
-        encoded_: \n\(String(data: encoded_, encoding: .utf8)!)
-        decoded: \n\(decoded)
-        encoded: \n\(String(data: encoded, encoding: .utf8)!)
-        decoded2: \n\(String(describing: decoded2 ?? nil))
-        """)
         
 //        try testRoundTrip(lyricFont)
         XCTAssertEqual(decoded, decoded2)

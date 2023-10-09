@@ -27,7 +27,7 @@ class FretTests: XCTestCase {
 //            3, color: Color(hexValue: 0xFFFFFF),
 //            font: Font(style: .italic, weight: .bold)
 //        )
-        let fret_ = Fret(3)
+//        let fret_ = Fret(3)
         // FIXME: How to write a fret element with all of its attributes present in a String? (formatting)
         let xml = """
         <fret>3</fret>
@@ -35,13 +35,7 @@ class FretTests: XCTestCase {
         let decoded = try? decoder.decode(Fret.self, from: xml.data(using: .utf8)!)
         let encoded = try! encoder.encode(decoded, withRootKey: "fret")
         let decoded2 = try? decoder.decode(Fret.self, from: encoded)
-        
-        print("""
-        decoded: \n\(fret_)
-        encoded: \n\(String(data: encoded, encoding: .utf8)!)
-        decoded2: \n\(String(describing: decoded2 ?? nil))
-        """)
-        
+    
 //        XCTAssertEqual(xml, String(data: encoded, encoding: .utf8)!)
         XCTAssertEqual(decoded, decoded2)
         

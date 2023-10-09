@@ -143,11 +143,6 @@ class ScorePartTests: XCTestCase {
         // No need to fix, not much of a consideration, just a rare case happend in tests.
         let decoded2 = try? decoder.decode(ScorePart.self, from: encodedData)
 
-        print("""
-        decoded: \(decoded)
-        decoded2: \(String(describing: decoded2))
-        """)
-        
 //        XCTAssertEqual(decoded, decoded2)
         XCTAssertEqual(decoded, original)
     }

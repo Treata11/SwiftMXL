@@ -457,10 +457,11 @@ final class ReveTests: XCTestCase {
         let decoded = try XMLDecoder().decode(PartList.self, from: xml.data(using: .utf8)!)
         let encoded = try encoder.encode(decoded, withRootKey: "part-list")
         
-        print("""
-        decoded: \n\(decoded)\n
-        encoded: \n\(String(data: encoded, encoding: .utf8)!)
-        """)
+        // TODO: Initialize the `expected` var
+//        print("""
+//        decoded: \n\(decoded)\n
+//        encoded: \n\(String(data: encoded, encoding: .utf8)!)
+//        """)
     }
 
     func testPrint() throws {

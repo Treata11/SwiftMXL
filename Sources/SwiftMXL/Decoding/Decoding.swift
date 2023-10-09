@@ -42,27 +42,13 @@ extension Score {
         if let topLevelTag = Score.probeTopLevelTag(data: data) {
             decoder.userInfo[CodingUserInfoKey(rawValue: Score.topLevelTagKey)!] = topLevelTag
             tag = topLevelTag
-            
-            print("""
-            topLevelTag: \n\(topLevelTag)
-            decoder: \n\(decoder)
-            tag: \n\(tag!.stringValue)
-            """)
         }
         
         if tag == Score.CodingKeys.partwise {
             let decodedPartwise = try decoder.decode(Partwise.self, from: data)
-            print("""
-                  Decoding.decodedPartwisely
-                  --------------------------------------------------------------------
-                  """)
             self = .partwise(decodedPartwise)
         } else if tag == Score.CodingKeys.timewise {
             let decodedTimewise = try decoder.decode(Timewise.self, from: data)
-            print("""
-            Decoding.decodedTimewisely
-            --------------------------------------------------------------------
-            """)
             self = .timewise(decodedTimewise)
         } else {
             throw DecodingError.typeMismatch(

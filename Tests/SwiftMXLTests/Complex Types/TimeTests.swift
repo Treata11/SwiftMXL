@@ -27,15 +27,8 @@ class TimeTests: XCTestCase {
             .decode(Time.self, from: xml.data(using: .utf8)!)
         // Time.Measured
         let expected = Time([Time.Signature(beats: ["3+2"], beatType: ["8"])], symbol: .singleNumber)
-        let encoded = try! encoder.encode(decoded, withRootKey: "time")
+//        let encoded = try! encoder.encode(decoded, withRootKey: "time")
         
-        print("""
-        TimeTests:
-        decoded: \n\(decoded)
-        expected: \n\(expected)
-        encoded: \n\(String(data: encoded, encoding: .utf8) ?? "nil")
-        ------------------------------------------------------------------------
-        """)
         XCTAssertEqual(decoded, expected)
     }
     
@@ -57,17 +50,9 @@ class TimeTests: XCTestCase {
             [Time.Signature(beats: ["1"], beatType: ["8"]), Time.Signature(beats: ["2"], beatType: ["4"])],
             symbol: .singleNumber
         )
-        let encoded = try! encoder.encode(decoded, withRootKey: "time")
+//        let encoded = try! encoder.encode(decoded, withRootKey: "time")
         let expectedEncoded = try! encoder.encode(expected, withRootKey: "time")
         
-        print("""
-        TimeTests:
-        decoded: \n\(decoded)\n
-        encoded: \n\(String(data: encoded, encoding: .utf8) ?? "nil")\n
-        expected: \n\(expected)\n
-        expectedEncoded: \n\(String(data: expectedEncoded, encoding: .utf8)!)
-        ------------------------------------------------------------------------
-        """)
         XCTAssertEqual(decoded, expected)
     }
     
@@ -84,14 +69,8 @@ class TimeTests: XCTestCase {
         """
         let decoded = try XMLDecoder().decode(Time.Measured.self, from: xml.data(using: .utf8)!)
         let expected = Time.Measured([Time.Signature(beats: ["3"], beatType: ["4"]), Time.Signature(beats: ["1"], beatType: ["8"])])
-        let encoded = try! encoder.encode(decoded, withRootKey: "time")
+//        let encoded = try! encoder.encode(decoded, withRootKey: "time")
         
-        print("""
-        TimeTests:
-        decoded: \n\(decoded)
-        encoded: \n\(String(data: encoded, encoding: .utf8) ?? "nil")
-        ------------------------------------------------------------------------
-        """)
         XCTAssertEqual(decoded, expected)
     }
 }
