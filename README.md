@@ -1,16 +1,14 @@
-# SwiftMXL
+# Swift Musical eXtensible Language 
 
 This package is a fork of the original 
 [dn-m/MusicXML](https://github.com/dn-m/MusicXML).
 
 ![Swift Version](https://img.shields.io/badge/Swift-5.1-orange.svg)
 ![Platforms](https://img.shields.io/badge/platform-linux%20%7C%20macOS%20%7C%20iOS%20%7C%20watchOS%20%7C%20tvOS-lightgrey)
-<!-- [![Build Status](https://travis-ci.org/dn-m/MusicXML.svg?branch=latest)](https://travis-ci.org/dn-m/MusicXML) -->
-<!-- [![Code Coverage](https://codecov.io/gh/dn-m/MusicXML/branch/latest/graph/badge.svg)](https://codecov.io/github/dn-m/MusicXML) -->
 
-A **Work-In-Progress** implementation of the [MusicXML](https://www.musicxml.com) specification in Swift.
+A **Work-In-Progress** implementation of the [musicXML](https://www.musicxml.com) specification in Swift.
 
-The goal of this project is to allow Swift users to read, manipulate, and write musicXML files in a richly-typed manner on any platform supported by Swift.
+The goal of this project is to allow Swift users to read, manipulate, and write musicXML files in a _richly-typed_ manner on any platform supported by Swift.
 
 ## Hello, world!
 
@@ -20,7 +18,7 @@ Let's construct the "Hello, world!" score example from the [musicXML documentati
 
 When rendered graphically, this score example should look something like this:
 
-<img src="Documentation/HelloWorld.svg" alt="SVG" width="643.3" height="333">
+<img src="Documentation/HelloWorld.svg" alt="SVG" width="252" height="131">
 
 ### XML Representation
 
@@ -82,7 +80,13 @@ let clef = Clef(sign: .g, line: 2)
 let attributes = Attributes(
     divisions: 1,
     keys: [key],
-    times: [time],
+    times: [Time(
+        [
+            Time.Signature(
+                beats: ["4"],
+                beatType: ["4"]
+            )] 
+    )],
     clefs: [clef]
 )
 let measure = Partwise.Measure(
@@ -112,10 +116,9 @@ let fromString = try Score(string: string)
 let fromURL = try Score(url: url)
 ```
 
-[comment]: <> ( ### 🚧 Work-in-progress: Encoding a `Score` into musicXML)
+### 🚧 Work-in-progress: Encoding a `Score` into musicXML
 
-
-
+[Pre-release version 0.3.0](https://github.com/Treata11/SwiftMXL/milestone/1) will see the completion of the encoding from a `Score` into the musicXML format.
 
 ## Getting Started
 
@@ -127,31 +130,41 @@ Use the [Swift Package Manager](https://swift.org/package-manager/) to include t
 
 [comment]: <> ( If you want to use the `SwiftMXL` module in your own project, add the `SwiftMXL` package to the `dependencies` section of your `Package.swift` file:)
 
-<!-- ### Development
+### Development
 
 To contribute to the `SwiftMXL` package, clone the `git` repository:
 
-```
-git clone https://github.com/Treata11/SwiftMXL && cd SwiftMXL
+```BASH
+git clone git@github.com:Treata11/SwiftMXL.git && cd SwiftMXL
 ```
 
 Build the package:
 
-```
+```BASH
 swift build
 ```
 
 Run the tests:
 
-```
+```BASH
 swift test
 ```
 
-If you use the Xcode IDE
+#### If you use **Xcode**:
 
-```open package.swift``` or simply ```xed .```
--->
+`open package.swift` or simply `xed .`
 
+### Development Roadmap
+
+The upcoming pre-release versions will be focused on completing different tasks.
+
+### 0.3.0
+
+Pre-release version **0.3.0** will be defined by completing the implementation of the **encoding** of **abstract musical content**. The LilyPond Test Suite tests will be transformed into round-trip tests to ensure that the plumbing is clean.
+
+### 0.4.0
+
+Pre-release version **0.4.0** will be defined by refining the public interfaces exposed by the `SwiftMXL` package. Up until this point, public initializers may be somewhat clumsy.
 
 ## More Resources
 
