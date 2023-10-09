@@ -51,7 +51,7 @@ class TimeTests: XCTestCase {
             symbol: .singleNumber
         )
 //        let encoded = try! encoder.encode(decoded, withRootKey: "time")
-        let expectedEncoded = try! encoder.encode(expected, withRootKey: "time")
+//        let expectedEncoded = try! encoder.encode(expected, withRootKey: "time")
         
         XCTAssertEqual(decoded, expected)
     }

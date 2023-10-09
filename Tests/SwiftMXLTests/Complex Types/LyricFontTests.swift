@@ -23,11 +23,11 @@ class LyricFontTests: XCTestCase {
     }
     
     func testRoundTrip() throws {
-        let lyricFont = LyricFont(
-            Font(family: "Helvetica", style: .italic, size: 42, weight: .bold),
-            number: 13,
-            name: "Recitative"
-        )
+//        let lyricFont = LyricFont(
+//            Font(family: "Helvetica", style: .italic, size: 42, weight: .bold),
+//            number: 13,
+//            name: "Recitative"
+//        )
         let xml = """
             <lyric-font number="13" name="Recitative">
                 <font-weight>bold</font-weight>
