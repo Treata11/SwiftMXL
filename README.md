@@ -20,7 +20,7 @@ Let's construct the "Hello, world!" score example from the [musicXML documentati
 
 When rendered graphically, this score example should look something like this:
 
-![Hello, world!](Documentation/HelloWorld.svg)
+<img src="Documentation/HelloWorld.svg" alt="SVG" width="643.3" height="333">
 
 ### XML Representation
 
